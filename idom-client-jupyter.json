@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "idom-client-jupyter/extension": true
+  }
+}
