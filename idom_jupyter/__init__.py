@@ -1,6 +1,9 @@
 from ._version import version_info, __version__
 
-from .example import *
+from .widget import Layout
+
+__all__ = [Layout, version_info, __version__]
+
 
 def _jupyter_nbextension_paths():
     """Called by Jupyter Notebook Server to detect if it is a valid nbextension and
@@ -19,9 +22,11 @@ def _jupyter_nbextension_paths():
     require: Path to importable AMD Javascript module inside the
         <jupyter path>/nbextensions/<dest> directory
     """
-    return [{
-        'section': 'notebook',
-        'src': 'static',
-        'dest': 'idom-client-jupyter',
-        'require': 'idom-client-jupyter/extension'
-    }]
+    return [
+        {
+            "section": "notebook",
+            "src": "static",
+            "dest": "idom-client-jupyter",
+            "require": "idom-client-jupyter/extension",
+        }
+    ]

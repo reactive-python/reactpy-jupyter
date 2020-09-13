@@ -24,14 +24,17 @@
     "prepublish": "webpack",
     "build": "webpack",
     "watch": "webpack --watch --mode=development",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "./node_modules/.bin/prettier --write lib"
   },
   "devDependencies": {
-    "webpack": "^3.5.5",
-    "rimraf": "^2.6.1"
+    "prettier": "^2.1.1",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.5.5"
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.1 || ^2 || ^3",
+    "idom-client-react": "^0.4.0",
     "lodash": "^4.17.4"
   },
   "jupyterlab": {

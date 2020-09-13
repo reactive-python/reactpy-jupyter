@@ -6,7 +6,13 @@ build/
 node_modules/
 
 # Compiled javascript
-idom-jupyter/static/
+idom_jupyter/static/
 
 # OS X
 .DS_Store
+
+# Py Env
+.python-version
+
+# VSCode
+.vscode
