@@ -1,17 +1,35 @@
 import asyncio
+from functools import wraps
 from threading import Thread
 
 import ipywidgets as widgets
+from IPython.display import display as ipython_display
+
 from traitlets import Unicode, Instance
-from idom.core.layout import Layout as IdomLayout, LayoutEvent as IdomLayoutEvent
+from idom.core.layout import Layout, LayoutEvent
 from idom.core.dispatcher import SingleViewDispatcher
 
 # See js/lib/widget.js for the frontend counterpart to this file.
 
 
+def display(constructor, *args, **kwargs):
+    """Function for converting IDOM elements to widgets and then displaying them"""
+    return ipython_display(LayoutWidget(constructor, *args, **kwargs))
+
+
+def widgetize(constructor):
+    """A decorator that turns an IDOM element into a Jupyter Widget constructor"""
+
+    @wraps(constructor)
+    def wrapper(*args, **kwargs):
+        return LayoutWidget(constructor, *args, **kwargs)
+
+    return wrapper
+
+
 @widgets.register
-class Layout(widgets.DOMWidget):
-    """An example widget."""
+class LayoutWidget(widgets.DOMWidget):
+    """A widget for displaying IDOM elements"""
 
     # Name of the widget view class in front-end
     _view_name = Unicode("IdomView").tag(sync=True)
@@ -46,7 +64,7 @@ class Layout(widgets.DOMWidget):
             self._started = True
             _spawn_async_daemon(self._idom_run)
         elif m_type == "dom-event":
-            event = IdomLayoutEvent(**message["data"])
+            event = LayoutEvent(**message["data"])
             self._loop.call_soon_threadsafe(self._recv_queue.put_nowait, event)
 
     async def _idom_run(self):
@@ -55,7 +73,7 @@ class Layout(widgets.DOMWidget):
 
         constructor, args, kwargs = self._func_args_kwargs
         root_element = constructor(*args, **kwargs)
-        async with SingleViewDispatcher(IdomLayout(root_element)) as dispatcher:
+        async with SingleViewDispatcher(Layout(root_element)) as dispatcher:
             await dispatcher.run(self._idom_send, self._recv_queue.get, None)
 
     async def _idom_send(self, data):

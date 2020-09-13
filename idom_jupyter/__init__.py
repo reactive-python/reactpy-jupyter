@@ -1,8 +1,9 @@
-from ._version import version_info, __version__
+from ._version import version_info  # noqa
+from ._version import __version__  # noqa
 
-from .widget import Layout
+from .widget import LayoutWidget, widgetize, display
 
-__all__ = [Layout, version_info, __version__]
+__all__ = ["LayoutWidget", "widgetize", "display"]
 
 
 def _jupyter_nbextension_paths():

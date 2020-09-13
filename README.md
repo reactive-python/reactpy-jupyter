@@ -6,9 +6,32 @@ A client for IDOM implemented using Jupyter widgets
 
 Run some examples by clicking the badge below:
 
-<a target="_blank" href="https://mybinder.org/v2/gh/idom-team/idom-jupyter/master?filepath=notebooks%2Fintroduction.ipynb">
+<a href="https://mybinder.org/v2/gh/idom-team/idom-jupyter/master?filepath=notebooks%2Fintroduction.ipynb">
     <img alt="Binder" height="25px" src="https://mybinder.org/badge_logo.svg" />
 </a>
+
+## Usage
+
+In a Jupyter Notebook cell, simply create an IDOM layout and use the `idom_jupyter.display`
+function to display it:
+
+```python
+import idom
+from idom_jupyter import display
+
+
+@idom.element
+def ClickCount():
+    count, set_count = idom.hooks.use_state(0)
+
+    return idom.html.button(
+        {"onClick": lambda event: set_count(count + 1)},
+        [f"Click count: {count}"],
+    )
+
+
+display(ClickCount)
+```
 
 ## Installation
 
