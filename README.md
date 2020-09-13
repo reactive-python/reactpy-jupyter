@@ -2,6 +2,14 @@
 
 A client for IDOM implemented using Jupyter widgets
 
+## Try It Now!
+
+Run some examples by clicking the badge below:
+
+<a href="https://mybinder.org/v2/gh/idom-team/idom-jupyter/master?filepath=notebooks%2Fintroduction.ipynb">
+    <img alt="Binder" height="25px" src="https://mybinder.org/badge_logo.svg" />
+</a>
+
 ## Installation
 
 To install use pip:

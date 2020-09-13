@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+python setup.py jsdeps
+python setup.py install
+
+jupyter nbextension install --py --symlink --sys-prefix idom_jupyter
+jupyter nbextension enable --py --sys-prefix idom_jupyter
+jupyter labextension install js
