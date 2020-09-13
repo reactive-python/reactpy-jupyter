@@ -23,21 +23,17 @@ class IdomView extends widgets.DOMWidgetView {
   render() {
     var id = _viewID.id;
     _viewID.id++;
-    this.model.on("msg:custom", (update, buffers) => {
-      if (this.idomUpdate) {
-        var [pathPrefix, patch] = update;
-        this.idomUpdate(pathPrefix, patch);
-      }
-    });
-    var registerUpdateCallback = (updateCallback) => {
-      this.idomUpdate = updateCallback;
+    var saveUpdateHook = (updateHook) => {
+      this.model.on("msg:custom", (update, buffers) => {
+        updateHook(...update);
+      });
       this.model.send({ type: "client-ready", id: id, data: null });
     };
     var sendEvent = (event) => {
       this.model.send({ type: "dom-event", id: id, data: event });
     };
 
-    idomClientReact.mountLayout(this.el, registerUpdateCallback, sendEvent);
+    idomClientReact.mountLayout(this.el, saveUpdateHook, sendEvent);
   }
 }
 

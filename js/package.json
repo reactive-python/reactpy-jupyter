@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.1 || ^2 || ^3",
-    "idom-client-react": "^0.4.0",
+    "idom-client-react": "^0.4.2",
     "lodash": "^4.17.4"
   },
   "jupyterlab": {

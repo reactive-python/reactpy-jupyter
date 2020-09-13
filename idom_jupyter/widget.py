@@ -4,7 +4,7 @@ from threading import Thread
 import ipywidgets as widgets
 from traitlets import Unicode, Instance
 from idom.core.layout import Layout as IdomLayout, LayoutEvent as IdomLayoutEvent
-from idom.core.dispatcher import SingleStateDispatcher
+from idom.core.dispatcher import SingleViewDispatcher
 
 # See js/lib/widget.js for the frontend counterpart to this file.
 
@@ -55,7 +55,7 @@ class Layout(widgets.DOMWidget):
 
         constructor, args, kwargs = self._func_args_kwargs
         root_element = constructor(*args, **kwargs)
-        async with SingleStateDispatcher(IdomLayout(root_element)) as dispatcher:
+        async with SingleViewDispatcher(IdomLayout(root_element)) as dispatcher:
             await dispatcher.run(self._idom_send, self._recv_queue.get, None)
 
     async def _idom_send(self, data):
