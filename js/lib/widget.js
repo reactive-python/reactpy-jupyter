@@ -16,21 +16,23 @@ var IdomModel = widgets.DOMWidgetModel.extend({
 
 // Custom View. Renders the widget model.
 
-var _viewID = { id: 0 };
+var _nextViewID = { id: 0 };
 
 class IdomView extends widgets.DOMWidgetView {
   // Defines how the widget gets rendered into the DOM
   render() {
-    var id = _viewID.id;
-    _viewID.id++;
+    var viewID = _nextViewID.id;
+    _nextViewID.id++;
     var saveUpdateHook = (updateHook) => {
-      this.model.on("msg:custom", (update, buffers) => {
-        updateHook(...update);
+      this.model.on("msg:custom", (msg, buffers) => {
+        if (msg.viewID == viewID) {
+          updateHook(...msg.data);
+        }
       });
-      this.model.send({ type: "client-ready", id: id, data: null });
+      this.model.send({ type: "client-ready", viewID: viewID, data: null });
     };
     var sendEvent = (event) => {
-      this.model.send({ type: "dom-event", id: id, data: event });
+      this.model.send({ type: "dom-event", viewID: viewID, data: event });
     };
 
     idomClientReact.mountLayout(this.el, saveUpdateHook, sendEvent);
