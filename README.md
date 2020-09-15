@@ -48,7 +48,7 @@ For a development installation (requires npm),
 
     $ git clone https://github.com/idom-team/idom-jupyter.git
     $ cd idom-jupyter
-    $ pip install -e .
+    $ pip install -e . -r requirements.txt
     $ jupyter nbextension install --py --symlink --sys-prefix idom_jupyter
     $ jupyter nbextension enable --py --sys-prefix idom_jupyter
     $ jupyter labextension install js
