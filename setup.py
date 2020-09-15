@@ -149,9 +149,9 @@ setup_args = dict(
         (
             "share/jupyter/nbextensions/idom-client-jupyter",
             [
-                "idom-client-jupyter/static/extension.js",
-                "idom-client-jupyter/static/index.js",
-                "idom-client-jupyter/static/index.js.map",
+                "idom_jupyter/static/extension.js",
+                "idom_jupyter/static/index.js",
+                "idom_jupyter/static/index.js.map",
             ],
         ),
         ("etc/jupyter/nbconfig/notebook.d", ["idom-client-jupyter.json"]),
