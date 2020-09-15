@@ -1,13 +1,13 @@
 import asyncio
 from functools import wraps
 from threading import Thread
+from queue import Queue as SyncQueue
 
 import ipywidgets as widgets
 from IPython.display import display as ipython_display
 
 from traitlets import Unicode, Instance
-from idom.core.layout import Layout, LayoutEvent
-from idom.core.dispatcher import SingleViewDispatcher
+from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
 
 # See js/lib/widget.js for the frontend counterpart to this file.
 
@@ -52,47 +52,50 @@ class LayoutWidget(widgets.DOMWidget):
 
     def __init__(self, constructor, *args, **kwargs):
         super().__init__()
-        self._func_args_kwargs = (constructor, args, kwargs)
+        self._idom_model = {}
+        self._idom_views = set()
+        self._idom_layout = Layout(constructor(*args, **kwargs))
+        self._idom_loop = _spawn_threaded_event_loop(self._idom_layout_render_loop())
         self.on_msg(self._idom_on_msg)
-        self._idom_recv_queues = {}
-        self._idom_loops = {}
-        self.msgs = []
 
     @staticmethod
     def _idom_on_msg(self, message, buffers):
-        self.msgs.append(message)
         m_type = message.get("type")
         if m_type == "client-ready":
-            _spawn_async_daemon(self._idom_run_view(message["viewID"]))
+            v_id = message["viewID"]
+            self._idom_views.add(v_id)
+            update = LayoutUpdate.create_from({}, self._idom_model)
+            self.send({"viewID": v_id, "data": update})
         elif m_type == "dom-event":
-            view_id = message["viewID"]
-            queue = self._idom_recv_queues[view_id]
-            event = LayoutEvent(**message["data"])
-            self._idom_loops[view_id].call_soon_threadsafe(queue.put_nowait, event)
+            asyncio.run_coroutine_threadsafe(
+                self._idom_layout.dispatch(LayoutEvent(**message["data"])),
+                loop=self._idom_loop,
+            )
+        elif m_type == "client-removed":
+            v_id = message["viewID"]
+            if v_id in self._idom_views:
+                self._idom_views.remove(message["viewID"])
 
-    async def _idom_run_view(self, view_id):
-        self._idom_loops[view_id] = asyncio.get_event_loop()
-        self._idom_recv_queues[view_id] = asyncio.Queue()
+    async def _idom_layout_render_loop(self):
+        async with self._idom_layout:
+            while True:
+                update = await self._idom_layout.render()
 
-        async def send(data):
-            self.send({"viewID": view_id, "data": data})
-
-        async def recv():
-            self.msgs.append(["recv", view_id])
-            return await self._idom_recv_queues[view_id].get()
-
-        f, a, kw = self._func_args_kwargs
-        async with SingleViewDispatcher(Layout(f(*a, **kw))) as dispatcher:
-            await dispatcher.run(send, recv, None)
+                self._idom_model = update.apply_to(self._idom_model)
+                for v_id in self._idom_views:
+                    self.send({"viewID": v_id, "data": update})
 
 
-def _spawn_async_daemon(coro):
+def _spawn_threaded_event_loop(coro):
+    loop_q = SyncQueue()
+
     def run_in_thread() -> None:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
+        loop_q.put(loop)
         loop.run_until_complete(coro)
 
     thread = Thread(target=run_in_thread, daemon=True)
     thread.start()
 
-    return thread
+    return loop_q.get()

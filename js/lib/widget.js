@@ -20,22 +20,38 @@ var _nextViewID = { id: 0 };
 
 class IdomView extends widgets.DOMWidgetView {
   // Defines how the widget gets rendered into the DOM
+
+  constructor(options) {
+    super(options);
+    this.render = this.render.bind(this);
+    this.remove = this.remove.bind(this);
+  }
+
   render() {
-    var viewID = _nextViewID.id;
+    this.viewID = _nextViewID.id;
     _nextViewID.id++;
     var saveUpdateHook = (updateHook) => {
       this.model.on("msg:custom", (msg, buffers) => {
-        if (msg.viewID == viewID) {
+        if (msg.viewID == this.viewID) {
           updateHook(...msg.data);
         }
       });
-      this.model.send({ type: "client-ready", viewID: viewID, data: null });
+      this.model.send({
+        type: "client-ready",
+        viewID: this.viewID,
+        data: null,
+      });
     };
     var sendEvent = (event) => {
-      this.model.send({ type: "dom-event", viewID: viewID, data: event });
+      this.model.send({ type: "dom-event", viewID: this.viewID, data: event });
     };
 
     idomClientReact.mountLayout(this.el, saveUpdateHook, sendEvent);
+  }
+
+  remove() {
+    this.send({ type: "client-removed", viewID: this.viewID });
+    return super.remove();
   }
 }
 
