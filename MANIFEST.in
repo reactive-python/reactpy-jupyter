@@ -1,2 +1,2 @@
-recursive-include idom-client-jupyter/static *.*
+recursive-include idom_jupyter/static *.*
 include idom-client-jupyter.json
