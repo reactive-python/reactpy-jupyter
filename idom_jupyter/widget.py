@@ -12,9 +12,12 @@ from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
 # See js/lib/widget.js for the frontend counterpart to this file.
 
 
-def display(constructor, *args, **kwargs):
-    """Function for converting IDOM elements to widgets and then displaying them"""
-    return ipython_display(LayoutWidget(constructor, *args, **kwargs))
+def run(constructor):
+    """Run the given IDOM elemen definition as a Jupyter Widget.
+
+    This function is meant to be similarly to ``idom.run``.
+    """
+    return ipython_display(LayoutWidget(constructor()))
 
 
 def widgetize(constructor):
@@ -22,7 +25,7 @@ def widgetize(constructor):
 
     @wraps(constructor)
     def wrapper(*args, **kwargs):
-        return LayoutWidget(constructor, *args, **kwargs)
+        return LayoutWidget(constructor(*args, **kwargs))
 
     return wrapper
 
@@ -50,11 +53,11 @@ class LayoutWidget(widgets.DOMWidget):
 
     _client_ready_callbacks = Instance(widgets.CallbackDispatcher, ())
 
-    def __init__(self, constructor, *args, **kwargs):
+    def __init__(self, element):
         super().__init__()
         self._idom_model = {}
         self._idom_views = set()
-        self._idom_layout = Layout(constructor(*args, **kwargs))
+        self._idom_layout = Layout(element)
         self._idom_loop = _spawn_threaded_event_loop(self._idom_layout_render_loop())
         self.on_msg(self._idom_on_msg)
 
