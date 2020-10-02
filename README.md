@@ -1,6 +1,6 @@
 # idom-jupyter
 
-A client for IDOM implemented using Jupyter widgets
+A client for [IDOM](https://github.com/idom-team/idom) implemented using Jupyter widgets
 
 ## Try It Now!
 
@@ -12,26 +12,50 @@ Check out a live example by clicking the badge below:
 
 ## Usage
 
-In a Jupyter Notebook cell, simply create an IDOM layout and use the `idom_jupyter.display`
+In a Jupyter Notebook cell, simply create an IDOM layout and use the `idom_jupyter.run`
 function to display it:
 
 ```python
 import idom
-from idom_jupyter import display
+import idom_jupyter
 
 
 @idom.element
 def ClickCount():
     count, set_count = idom.hooks.use_state(0)
-
     return idom.html.button(
         {"onClick": lambda event: set_count(count + 1)},
         [f"Click count: {count}"],
     )
 
 
-display(ClickCount)
+idom_jupyter.run(ClickCount)
 ```
+
+Alternatively decorate the root of your IDOM layout with `idom_jupyter.root_element` to
+make it return a Jupyter Widget:
+
+
+```python
+import idom
+from idom_jupyter import widgetize
+
+
+@widgetize
+@idom.element
+def YourRootElement():
+    return YourChildElement()
+
+
+# note how we don't need to widgetize here (only on the root)
+@idom.element
+def YourChildElement():
+    ...
+
+
+YourRootElement()
+```
+
 
 ## Installation
 
