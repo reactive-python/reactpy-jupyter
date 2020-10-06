@@ -8,6 +8,7 @@ from IPython.display import display as ipython_display
 
 from traitlets import Unicode, Instance
 from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
+from idom.client.protocol import ClientImplementation, client_implementation
 
 # See js/lib/widget.js for the frontend counterpart to this file.
 
@@ -102,3 +103,19 @@ def _spawn_threaded_event_loop(coro):
     thread.start()
 
     return loop_q.get()
+
+
+class _IdomJupyterClient(ClientImplementation):
+    """An implementation of IDOM's client interface for Jupyter"""
+
+    def register_web_module(self, name, source):
+        raise NotImplementedError("idom-jupyter does not support this feature")
+
+    def web_module_url(self, name):
+        raise NotImplementedError("idom-jupyter does not support this feature")
+
+    def web_module_exists(self, name):
+        raise NotImplementedError("idom-jupyter does not support this feature")
+
+
+client_implementation.current = _IdomJupyterClient()
