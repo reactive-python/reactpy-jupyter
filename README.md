@@ -32,7 +32,7 @@ def ClickCount():
 idom_jupyter.run(ClickCount)
 ```
 
-Alternatively decorate the root of your IDOM layout with `idom_jupyter.root_element` to
+Alternatively decorate the root of your IDOM layout with `idom_jupyter.widgetize` to
 make it return a Jupyter Widget:
 
 
