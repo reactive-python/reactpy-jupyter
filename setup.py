@@ -154,7 +154,15 @@ setup_args = dict(
                 "idom_jupyter/static/index.js.map",
             ],
         ),
-        ("etc/jupyter/nbconfig/notebook.d", ["idom-client-jupyter.json"]),
+        (
+            "etc/jupyter/nbconfig/notebook.d",
+            ["jupyter-config/notebook.d/idom-client-jupyter.json"],
+        ),
+        # like `jupyter serverextension enable --sys-prefix`
+        (
+            "etc/jupyter/jupyter_notebook_config.d",
+            ["jupyter-config/jupyter_notebook_config.d/idom-client-jupyter.json"],
+        ),
     ],
     install_requires=[
         "ipywidgets>=7.0.0",

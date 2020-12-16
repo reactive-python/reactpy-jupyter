@@ -31,3 +31,7 @@ def _jupyter_nbextension_paths():
             "require": "idom-client-jupyter/extension",
         }
     ]
+
+
+def _jupyter_server_extension_paths():
+    return [{"module": "idom_jupyter.jupyter_server_extension"}]
