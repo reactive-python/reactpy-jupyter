@@ -1,4 +1,3 @@
-import os
 import asyncio
 from urllib.parse import urljoin
 from functools import wraps
@@ -6,6 +5,7 @@ from threading import Thread
 from queue import Queue as SyncQueue
 
 import ipywidgets as widgets
+from IPython import get_ipython
 from IPython.display import display as ipython_display
 from notebook import notebookapp
 from traitlets import Unicode, Instance
@@ -113,18 +113,15 @@ _NOTEBOOK_BASE_URL = None
 def _get_base_url_of_current_notebook():
     global _NOTEBOOK_BASE_URL
     if _NOTEBOOK_BASE_URL is None:
-        found = ""
-        cwd = os.getcwd()
+        ipython_home_dir = get_ipython().home_dir
         for server_info in notebookapp.list_running_servers():
-            server_base_url = server_info["base_url"]
-            if cwd.startswith(server_base_url):
-                if len(server_base_url) > len(found):
-                    found = server_base_url
-        if not found:
+            if ipython_home_dir == server_info["notebook_dir"]:
+                _NOTEBOOK_BASE_URL = server_info["base_url"]
+                break
+        else:
             raise ValueError(
-                "Could not find a notebook running in a parent directory of {cwd!r}"
+                f"Could not find a notebook running in {ipython_home_dir!r}"
             )
-        _NOTEBOOK_BASE_URL = found
     return _NOTEBOOK_BASE_URL
 
 
