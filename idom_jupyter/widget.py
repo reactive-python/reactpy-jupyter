@@ -109,13 +109,15 @@ class _IdomJupyterClient(ClientImplementation):
     """An implementation of IDOM's client interface for Jupyter"""
 
     def register_web_module(self, name, source):
-        raise NotImplementedError("idom-jupyter does not support this feature")
+        return _old_client_implementation.regiser_web_module(name, source)
 
     def web_module_url(self, name):
-        raise NotImplementedError("idom-jupyter does not support this feature")
+        # see idom_jupyter.jupyter_server_extension for info on this
+        return f"/_idom_web_modules/{name}.js"
 
     def web_module_exists(self, name):
-        raise NotImplementedError("idom-jupyter does not support this feature")
+        return _old_client_implementation.web_module_exists(name)
 
 
+_old_client_implementation = client_implementation.current
 client_implementation.current = _IdomJupyterClient()
