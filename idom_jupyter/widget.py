@@ -1,11 +1,13 @@
+import os
 import asyncio
+from urllib.parse import urljoin
 from functools import wraps
 from threading import Thread
 from queue import Queue as SyncQueue
 
 import ipywidgets as widgets
 from IPython.display import display as ipython_display
-
+from notebook import notebookapp
 from traitlets import Unicode, Instance
 from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
 from idom.client.protocol import ClientImplementation, client_implementation
@@ -105,6 +107,27 @@ def _spawn_threaded_event_loop(coro):
     return loop_q.get()
 
 
+_NOTEBOOK_BASE_URL = None
+
+
+def _get_base_url_of_current_notebook():
+    global _NOTEBOOK_BASE_URL
+    if _NOTEBOOK_BASE_URL is None:
+        found = ""
+        cwd = os.getcwd()
+        for server_info in notebookapp.list_running_servers():
+            server_base_url = server_info["base_url"]
+            if cwd.startswith(server_base_url):
+                if len(server_base_url) > len(found):
+                    found = server_base_url
+        if not found:
+            raise ValueError(
+                "Could not find a notebook running in a parent directory of {cwd!r}"
+            )
+        _NOTEBOOK_BASE_URL = found
+    return _NOTEBOOK_BASE_URL
+
+
 class _IdomJupyterClient(ClientImplementation):
     """An implementation of IDOM's client interface for Jupyter"""
 
@@ -113,7 +136,9 @@ class _IdomJupyterClient(ClientImplementation):
 
     def web_module_url(self, name):
         # see idom_jupyter.jupyter_server_extension for info on this
-        return f"/_idom_web_modules/{name}.js"
+        return urljoin(
+            _get_base_url_of_current_notebook(), f"_idom_web_modules/{name}.js"
+        )
 
     def web_module_exists(self, name):
         return _old_client_implementation.web_module_exists(name)
