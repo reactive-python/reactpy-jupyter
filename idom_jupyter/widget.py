@@ -128,18 +128,18 @@ def _get_base_url_of_current_notebook():
 class _IdomJupyterClient(ClientImplementation):
     """An implementation of IDOM's client interface for Jupyter"""
 
-    def register_web_module(self, name, source):
-        return _old_client_implementation.regiser_web_module(name, source)
+    web_module_exports = staticmethod(client_implementation.current.web_module_exports)
+    web_module_exists = staticmethod(client_implementation.current.web_module_exists)
+    web_module_names = staticmethod(client_implementation.current.web_module_names)
+    web_module_path = staticmethod(client_implementation.current.web_module_path)
+    add_web_module = staticmethod(client_implementation.current.add_web_module)
 
-    def web_module_url(self, name):
+    @staticmethod
+    def web_module_url(name):
         # see idom_jupyter.jupyter_server_extension for info on this
         return urljoin(
             _get_base_url_of_current_notebook(), f"_idom_web_modules/{name}.js"
         )
 
-    def web_module_exists(self, name):
-        return _old_client_implementation.web_module_exists(name)
 
-
-_old_client_implementation = client_implementation.current
 client_implementation.current = _IdomJupyterClient()

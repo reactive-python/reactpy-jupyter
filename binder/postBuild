@@ -6,5 +6,3 @@ jupyter serverextension enable --py idom_jupyter
 jupyter nbextension install --py --symlink --sys-prefix idom_jupyter
 jupyter nbextension enable --py --sys-prefix idom_jupyter
 jupyter labextension install js
-
-idom install victory
