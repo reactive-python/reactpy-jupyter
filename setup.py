@@ -166,7 +166,7 @@ setup_args = dict(
     ],
     install_requires=[
         "ipywidgets>=7.0.0",
-        "idom>=0.13.0",
+        "idom>=0.15.0",
     ],
     packages=find_packages(),
     zip_safe=False,
