@@ -1,7 +1,7 @@
 from urllib.parse import urljoin
 
 from notebook.notebookapp import NotebookApp
-from idom.client.manage import BUILD_DIR
+from idom.client.manage import WEB_MODULES_DIR
 from tornado.web import StaticFileHandler
 from tornado.web import Application
 
@@ -15,7 +15,7 @@ def load_jupyter_server_extension(notebook_app: NotebookApp):
             (
                 route_pattern,
                 StaticFileHandler,
-                {"path": str(BUILD_DIR.absolute() / "web_modules")},
+                {"path": str(WEB_MODULES_DIR.absolute())},
             ),
         ],
     )
