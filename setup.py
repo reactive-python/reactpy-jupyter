@@ -61,9 +61,7 @@ setup_args = dict(
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     include_package_data=True,
-    install_requires=[
-        "ipywidgets>=7.0.0",
-    ],
+    install_requires=["ipywidgets>=7.0.0", "idom>=0.17.1"],
     packages=find_packages(),
     zip_safe=False,
     cmdclass=cmdclass,
