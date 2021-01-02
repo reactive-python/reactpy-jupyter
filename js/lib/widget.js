@@ -1,5 +1,4 @@
 var widgets = require("@jupyter-widgets/base");
-var coreutils = require("@jupyterlab/coreutils");
 var _ = require("lodash");
 var idomClientReact = require("idom-client-react");
 
