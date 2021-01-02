@@ -76,26 +76,34 @@ ipywidgets.Box(
 
 To install use pip:
 
-    $ pip install idom_jupyter
-    $ jupyter nbextension enable --py --sys-prefix idom_jupyter
+```
+pip install idom_jupyter
+```
 
 To install for jupyterlab
 
-    $ jupyter labextension install idom-client-jupyter
+```bash
+jupyter labextension install idom-client-jupyter
+```
 
 For a development installation (requires npm),
 
-    $ git clone https://github.com/idom-team/idom-jupyter.git
-    $ cd idom-jupyter
-    $ pip install -e . -r requirements.txt
-    $ jupyter serverextension enable --py idom_jupyter
-    $ jupyter nbextension install --py --symlink --overwrite --sys-prefix idom_jupyter
-    $ jupyter nbextension enable --py --sys-prefix idom_jupyter
-    $ jupyter labextension install js
+```
+git clone https://github.com/idom-team/idom-jupyter.git
+cd idom-jupyter
+pip install -e . -r requirements.txt
+jupyter serverextension enable --py idom_jupyter
+jupyter nbextension install --py --symlink --overwrite --sys-prefix idom_jupyter
+jupyter nbextension enable --py --sys-prefix idom_jupyter
+jupyter labextension install js
+jupyter lab build
+```
 
 When actively developing your extension, build Jupyter Lab with the command:
 
-    $ jupyter lab --watch
+```
+jupyter lab --watch
+```
 
 This takes a minute or so to get started, but then automatically rebuilds JupyterLab when your javascript changes.
 
