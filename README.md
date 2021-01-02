@@ -10,9 +10,9 @@ Check out a live example by clicking the badge below:
     <img alt="Binder" height="25px" src="https://mybinder.org/badge_logo.svg" />
 </a>
 
-## Usage
+## Getting Started
 
-Do one of the following:
+Before anything else, do one of the following:
 
 1. At the top of your notebook run
 
@@ -28,8 +28,10 @@ Do one of the following:
    ]
    ```
 
-Once you've done this, you can procede to author and display IDOM layouts natively in
-your Jupyter Notebook:
+## Usage
+
+Once you're done [getting started](#getting-started), you can procede to author and
+display IDOM layouts natively in your Jupyter Notebook:
 
 ```python
 import idom
@@ -46,7 +48,8 @@ ClickCount()
 ```
 
 You can also turn an `idom` element constructor into one that returns an `ipywidget` with
-the `idom_juptyer.widgetize` function:
+the `idom_juptyer.widgetize` function. This is useful if you wish to use IDOM in combination
+with other Jupyter Widgets as in the following example:
 
 ```python
 ClickCountWidget = idom_jupyter.widgetize(ClickCount)
