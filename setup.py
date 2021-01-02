@@ -43,7 +43,7 @@ data_files_spec = [
     (
         "share/jupyter/labextensions/idom-client-jupyter",
         "idom_jupyter/labextension",
-        "*.*",
+        "**/*.*",
     ),
     ("etc/jupyter/nbconfig/notebook.d", ".", "idom-client-jupyter.json"),
 ]
