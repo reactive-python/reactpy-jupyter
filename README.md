@@ -30,8 +30,8 @@ Before anything else, do one of the following:
 
 ## Usage
 
-Once you're done [getting started](#getting-started), you can procede to author and
-display IDOM layouts natively in your Jupyter Notebook:
+Once you're done [getting started](#getting-started), you can author and display IDOM
+layouts natively in your Jupyter Notebook:
 
 ```python
 import idom
