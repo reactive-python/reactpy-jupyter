@@ -1,2 +1,3 @@
-recursive-include idom_jupyter/static *.*
+recursive-include idom_jupyter/nbextension *.*
+recursive-include idom_jupyter/labextension *.*
 include idom-client-jupyter.json
