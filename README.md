@@ -12,13 +12,27 @@ Check out a live example by clicking the badge below:
 
 ## Usage
 
-In a Jupyter Notebook cell, simply create an IDOM layout and use the `idom_jupyter.run`
-function to display it:
+Do one of the following:
+
+1. At the top of your notebook run
+
+   ```python
+   import idom_jupyter
+   ```
+
+2. Register `idom_jupyter` as a permanant IPython extension in [your config file](https://ipython.readthedocs.io/en/stable/config/intro.html#introduction-to-ipython-configuration):
+
+   ```python
+   c.InteractiveShellApp.extensions = [
+       'idom_jupyter'
+   ]
+   ```
+
+Once you've done this, you can procede to author and display IDOM layouts natively in
+your Jupyter Notebook:
 
 ```python
 import idom
-import idom_jupyter
-
 
 @idom.element
 def ClickCount():
@@ -28,34 +42,32 @@ def ClickCount():
         [f"Click count: {count}"],
     )
 
-
-idom_jupyter.run(ClickCount)
+ClickCount()
 ```
 
-Alternatively decorate the root of your IDOM layout with `idom_jupyter.widgetize` to
-make it return a Jupyter Widget:
-
+You can also turn an `idom` element constructor into one that returns an `ipywidget` with
+the `idom_juptyer.widgetize` function:
 
 ```python
-import idom
-from idom_jupyter import widgetize
-
-
-@widgetize
-@idom.element
-def YourRootElement():
-    return YourChildElement()
-
-
-# note how we don't need to widgetize here (only on the root)
-@idom.element
-def YourChildElement():
-    ...
-
-
-YourRootElement()
+ClickCountWidget = idom_jupyter.widgetize(ClickCount)
+ipywidgets.Box(
+    [
+        ClickCountWidget(),
+        ClickCountWidget(),
+    ]
+)
 ```
 
+Alternatively just wrap an `idom` element instance in an `idom_jupyter.LayoutWidget`:
+
+```python
+ipywidgets.Box(
+    [
+        idom_jupyter.LayoutWidget(ClickCount()),
+        idom_jupyter.LayoutWidget(ClickCount()),
+    ]
+)
+```
 
 ## Installation
 
