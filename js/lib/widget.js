@@ -11,6 +11,7 @@ var IdomModel = widgets.DOMWidgetModel.extend({
     _view_module: "idom-client-jupyter",
     _model_module_version: "0.1.0",
     _view_module_version: "0.1.0",
+    _jupyter_server_base_url: null,
   }),
 });
 
@@ -48,7 +49,10 @@ class IdomView extends widgets.DOMWidgetView {
       this.el,
       saveUpdateHook,
       sendEvent,
-      concatAndResolveUrl(getJupyterServerBaseUrl(), "_idom_web_modules"),
+      concatAndResolveUrl(
+        this.model.attributes._jupyter_server_base_url || getJupyterServerBaseUrl(),
+        "_idom_web_modules"
+      ),
     );
   }
 
