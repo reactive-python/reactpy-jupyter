@@ -1,7 +1,7 @@
 from ._version import version_info  # noqa
 from ._version import __version__  # noqa
 
-from .widget import LayoutWidget, widgetize, run
+from .widget import LayoutWidget, widgetize, run, set_jupyter_server_base_url
 from .ipython_extension import load_ipython_extension, unload_ipython_extension
 
 
@@ -11,6 +11,7 @@ __all__ = [
     "run",
     "load_ipython_extension",
     "unload_ipython_extension",
+    "set_jupyter_server_base_url",
 ]
 
 

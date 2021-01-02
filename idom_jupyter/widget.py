@@ -5,8 +5,16 @@ from queue import Queue as SyncQueue
 
 import ipywidgets as widgets
 from IPython.display import display as ipython_display
-from traitlets import Unicode, Instance
+from traitlets import Unicode
 from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
+
+
+_JUPYTER_SERVER_BASE_URL = ""
+
+
+def set_jupyter_server_base_url(base_url):
+    global _JUPYTER_SERVER_BASE_URL
+    _JUPYTER_SERVER_BASE_URL = base_url
 
 
 def run(constructor):
@@ -48,10 +56,10 @@ class LayoutWidget(widgets.DOMWidget):
     # Version of the front-end module containing widget model
     _model_module_version = Unicode("^0.1.0").tag(sync=True)
 
-    _client_ready_callbacks = Instance(widgets.CallbackDispatcher, ())
+    _jupyter_server_base_url = Unicode().tag(sync=True)
 
     def __init__(self, element):
-        super().__init__()
+        super().__init__(_jupyter_server_base_url=_JUPYTER_SERVER_BASE_URL)
         self._idom_model = {}
         self._idom_views = set()
         self._idom_layout = Layout(element)
