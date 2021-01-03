@@ -80,10 +80,10 @@ To install use pip:
 pip install idom_jupyter
 ```
 
-To install for jupyterlab
+To install for jupyterlab be sure you've got `jupyterlab_widgets` installed
 
 ```bash
-jupyter labextension install idom-client-jupyter
+pip install jupyterlab_widgets
 ```
 
 For a development installation (requires npm),
