@@ -45,7 +45,11 @@ data_files_spec = [
         "idom_jupyter/labextension",
         "**/*.*",
     ),
-    ("etc/jupyter/nbconfig/notebook.d", ".", "idom-client-jupyter.json"),
+    (
+        "etc/jupyter/nbconfig",
+        "jupyter-config",
+        "**/*.json",
+    ),
 ]
 
 cmdclass = create_cmdclass("jsdeps", data_files_spec=data_files_spec)
