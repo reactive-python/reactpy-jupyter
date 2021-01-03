@@ -30,10 +30,8 @@ def unload_ipython_extension(ipython):
 
 
 def _post_run_cell(ipython, result):
-    output = ipython.user_ns_hidden["_"]
-    if isinstance(output, _Element):
-        display(LayoutWidget(output))
-        ipython.user_ns_hidden["_"] = None
+    if isinstance(result.result, _Element):
+        display(LayoutWidget(result.result))
 
 
 if get_ipython() is not None:
