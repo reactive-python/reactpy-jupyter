@@ -1,12 +1,23 @@
-from ._version import version_info, __version__
+from ._version import version_info  # noqa
+from ._version import __version__  # noqa
 
-from .example import *
+from .widget import LayoutWidget, widgetize, run, set_jupyter_server_base_url
+from .ipython_extension import load_ipython_extension, unload_ipython_extension
+
+
+__all__ = [
+    "LayoutWidget",
+    "widgetize",
+    "run",
+    "load_ipython_extension",
+    "unload_ipython_extension",
+    "set_jupyter_server_base_url",
+]
 
 
 def _jupyter_labextension_paths():
     """Called by Jupyter Lab Server to detect if it is a valid labextension and
     to install the widget
-
     Returns
     =======
     src: Source directory name to copy files from. Webpack outputs generated files
@@ -16,10 +27,12 @@ def _jupyter_labextension_paths():
         from `src` directory into <jupyter path>/labextensions/<dest> directory
         during widget installation
     """
-    return [{
-        'src': 'labextension',
-        'dest': 'idom-client-jupyter',
-    }]
+    return [
+        {
+            "src": "labextension",
+            "dest": "idom-client-jupyter",
+        }
+    ]
 
 
 def _jupyter_nbextension_paths():
@@ -39,9 +52,15 @@ def _jupyter_nbextension_paths():
     require: Path to importable AMD Javascript module inside the
         <jupyter path>/nbextensions/<dest> directory
     """
-    return [{
-        'section': 'notebook',
-        'src': 'nbextension',
-        'dest': 'idom-client-jupyter',
-        'require': 'idom-client-jupyter/extension'
-    }]
+    return [
+        {
+            "section": "notebook",
+            "src": "nbextension",
+            "dest": "idom-client-jupyter",
+            "require": "idom-client-jupyter/extension",
+        }
+    ]
+
+
+def _jupyter_server_extension_paths():
+    return [{"module": "idom_jupyter.jupyter_server_extension"}]
