@@ -52,9 +52,9 @@ class LayoutWidget(widgets.DOMWidget):
     _model_module = Unicode("idom-client-jupyter").tag(sync=True)
 
     # Version of the front-end module containing widget view
-    _view_module_version = Unicode("^0.1.0").tag(sync=True)
+    _view_module_version = Unicode("^0.4.0").tag(sync=True)
     # Version of the front-end module containing widget model
-    _model_module_version = Unicode("^0.1.0").tag(sync=True)
+    _model_module_version = Unicode("^0.4.0").tag(sync=True)
 
     _jupyter_server_base_url = Unicode().tag(sync=True)
 

@@ -1,5 +1,4 @@
 *.egg-info/
-.ipynb_checkpoints/
 dist/
 build/
 *.py[cod]
@@ -12,5 +11,12 @@ idom_jupyter/labextension/
 # OS X
 .DS_Store
 
-# PyEnv
+# Py Env
 .python-version
+
+# VSCode
+.vscode
+
+# Jupyter
+.ipynb_checkpoints/
+Untitled*.ipynb
