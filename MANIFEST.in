@@ -1,3 +1,0 @@
-recursive-include idom_jupyter/nbextension *.*
-recursive-include idom_jupyter/labextension *.*
-include jupyter-config/**/*.json
