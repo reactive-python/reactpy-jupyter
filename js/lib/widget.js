@@ -8,8 +8,8 @@ var IdomModel = widgets.DOMWidgetModel.extend({
     _view_name: "IdomView",
     _model_module: "idom-client-jupyter",
     _view_module: "idom-client-jupyter",
-    _model_module_version: "0.1.0",
-    _view_module_version: "0.1.0",
+    _model_module_version: "0.4.0",
+    _view_module_version: "0.4.0",
     _jupyter_server_base_url: null,
   }),
 });
@@ -67,8 +67,8 @@ var _HackyClientHandshakeModel = widgets.DOMWidgetModel.extend({
     _view_name: "_HackyClientHandshakeView",
     _model_module: "idom-client-jupyter",
     _view_module: "idom-client-jupyter",
-    _model_module_version: "0.1.0",
-    _view_module_version: "0.1.0",
+    _model_module_version: "0.4.0",
+    _view_module_version: "0.4.0",
   }),
 });
 
