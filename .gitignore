@@ -11,3 +11,6 @@ idom_jupyter/labextension/
 
 # OS X
 .DS_Store
+
+# PyEnv
+.python-version

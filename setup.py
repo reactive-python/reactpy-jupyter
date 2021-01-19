@@ -37,6 +37,7 @@ data_files_spec = [
     ('share/jupyter/labextensions/idom-client-jupyter', 'idom_jupyter/labextension', "**"),
     ("share/jupyter/labextensions/idom-client-jupyter", '.', "install.json"),
     ('etc/jupyter/nbconfig/notebook.d', '.', 'idom-client-jupyter.json'),
+    ("etc/jupyter/nbconfig", "jupyter-config", "**/*.json"),
 ]
 
 cmdclass = create_cmdclass('jsdeps', data_files_spec=data_files_spec)
@@ -51,7 +52,7 @@ setup_args = dict(
     long_description=LONG_DESCRIPTION,
     include_package_data=True,
     install_requires=[
-        'ipywidgets>=7.6.0',
+        'ipywidgets>=7.6.0', "idom>=0.20.1"
     ],
     packages=find_packages(),
     zip_safe=False,
