@@ -36,7 +36,7 @@ layouts natively in your Jupyter Notebook:
 ```python
 import idom
 
-@idom.element
+@idom.component
 def ClickCount():
     count, set_count = idom.hooks.use_state(0)
     return idom.html.button(
