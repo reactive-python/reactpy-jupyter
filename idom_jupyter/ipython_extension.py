@@ -1,6 +1,6 @@
 from functools import partial
 
-from idom import Component as _Component
+from idom.core.component import AbstractComponent
 from IPython import get_ipython
 from IPython.display import display
 
@@ -17,7 +17,7 @@ def load_ipython_extension(ipython):
         _POST_RUN_CELL_HOOK = partial(_post_run_cell, ipython)
         ipython.events.register("post_run_cell", _POST_RUN_CELL_HOOK)
         ipython.display_formatter.ipython_display_formatter.for_type(
-            _Component, lambda element: ({}, {})
+            AbstractComponent, lambda element: ({}, {})
         )
         _EXTENSION_LOADED = True
 
@@ -30,7 +30,7 @@ def unload_ipython_extension(ipython):
 
 
 def _post_run_cell(ipython, result):
-    if isinstance(result.result, _Component):
+    if isinstance(result.result, AbstractComponent):
         display(LayoutWidget(result.result))
 
 
