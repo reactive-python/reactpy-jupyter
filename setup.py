@@ -49,12 +49,7 @@ data_files_spec = [
         "install.json",
     ),
     (
-        "etc/jupyter/nbconfig/notebook.d",
-        ".",
-        "idom-client-jupyter.json",
-    ),
-    (
-        "etc/jupyter/nbconfig",
+        "etc/jupyter",
         "jupyter-config",
         "**/*.json",
     ),
