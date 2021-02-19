@@ -6,7 +6,7 @@ from tornado.web import StaticFileHandler
 from tornado.web import Application
 
 
-def load_jupyter_server_extension(notebook_app: NotebookApp):
+def _load_jupyter_server_extension(notebook_app: NotebookApp):
     web_app: Application = notebook_app.web_app
     route_pattern = urljoin(web_app.settings["base_url"], "_idom_web_modules/(.*)")
     web_app.add_handlers(
@@ -19,3 +19,7 @@ def load_jupyter_server_extension(notebook_app: NotebookApp):
             ),
         ],
     )
+
+
+# compat for older versions of Jupyter
+load_jupyter_server_extension = _load_jupyter_server_extension
