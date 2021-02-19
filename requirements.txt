@@ -3,3 +3,4 @@ flake8
 pre-commit
 wheel
 twine
+jupyter_packaging
