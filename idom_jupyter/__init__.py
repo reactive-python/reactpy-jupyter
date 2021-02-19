@@ -60,13 +60,3 @@ def _jupyter_nbextension_paths():
             "require": "idom-client-jupyter/extension",
         }
     ]
-
-
-def _jupyter_server_extension_paths():
-    """Return a list of dicts describing where to find Jupyter server extensions
-    """
-    return [{"module": "idom_jupyter.jupyter_server_extension"}]
-
-
-# compat for older versions of Jupyter
-jupyter_server_extension_paths = _jupyter_server_extension_paths
