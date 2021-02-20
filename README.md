@@ -18,7 +18,7 @@ To install use `pip`:
 pip install idom_jupyter
 ```
 
-Before anything else, do one of the following:
+Then, before anything else, do one of the following:
 
 1. At the top of your notebook run
 
