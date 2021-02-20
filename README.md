@@ -12,6 +12,12 @@ Check out a live example by clicking the badge below:
 
 ## Getting Started
 
+To install use `pip`:
+
+```
+pip install idom_jupyter
+```
+
 Before anything else, do one of the following:
 
 1. At the top of your notebook run
@@ -72,13 +78,7 @@ ipywidgets.Box(
 )
 ```
 
-# Installation
-
-To install use pip:
-
-```
-pip install idom_jupyter
-```
+# Development Installation
 
 For a development installation (requires [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/)),
 
