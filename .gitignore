@@ -12,6 +12,7 @@ idom_jupyter/labextension/
 .DS_Store
 
 # Py Env
+venv
 .python-version
 
 # VSCode
