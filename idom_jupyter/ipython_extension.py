@@ -1,5 +1,6 @@
 from functools import partial
 
+from idom.config import IDOM_CLIENT_IMPORT_SOURCE_URL
 from idom.core.component import AbstractComponent
 from IPython import get_ipython
 from IPython.display import display
@@ -14,6 +15,9 @@ _POST_RUN_CELL_HOOK = None
 def load_ipython_extension(ipython):
     global _POST_RUN_CELL_HOOK, _EXTENSION_LOADED
     if not _EXTENSION_LOADED:
+        # allow client to determine build location
+        IDOM_CLIENT_IMPORT_SOURCE_URL.set("./")
+
         _POST_RUN_CELL_HOOK = partial(_post_run_cell, ipython)
         ipython.events.register("post_run_cell", _POST_RUN_CELL_HOOK)
         ipython.display_formatter.ipython_display_formatter.for_type(
