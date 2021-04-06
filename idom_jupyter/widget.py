@@ -6,10 +6,15 @@ from queue import Queue as SyncQueue
 import ipywidgets as widgets
 from IPython.display import display as ipython_display
 from traitlets import Unicode
+from idom import Module
+from idom.config import IDOM_CLIENT_IMPORT_SOURCE_URL
 from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
+
+from .jupyter_server_extension import import_source_url_prefix
 
 
 _JUPYTER_SERVER_BASE_URL = ""
+IDOM_CLIENT_IMPORT_SOURCE_URL.set(f"./{import_source_url_prefix}")
 
 
 def set_jupyter_server_base_url(base_url):
@@ -57,6 +62,9 @@ class LayoutWidget(widgets.DOMWidget):
     _model_module_version = Unicode("^0.4.0").tag(sync=True)
 
     _jupyter_server_base_url = Unicode().tag(sync=True)
+    _client_module_url = Unicode(default_value=Module("idom-client-react").url).tag(
+        sync=True
+    )
 
     def __init__(self, element):
         super().__init__(_jupyter_server_base_url=_JUPYTER_SERVER_BASE_URL)
