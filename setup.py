@@ -57,7 +57,7 @@ data_files_spec = [
 
 cmdclass = create_cmdclass("jsdeps", data_files_spec=data_files_spec)
 cmdclass["jsdeps"] = combine_commands(
-    install_npm(js_dir, npm=["yarn"], build_cmd="build:prod"),
+    install_npm(js_dir, npm=["yarn"], build_cmd="build"),
     ensure_targets(jstargets),
 )
 
@@ -67,7 +67,7 @@ setup_args = dict(
     description="A client for IDOM implemented using Jupyter widgets",
     long_description=LONG_DESCRIPTION,
     include_package_data=True,
-    install_requires=["ipywidgets>=7.6.0", "idom>=0.23,<0.24"],
+    install_requires=["ipywidgets>=7.6.0", "idom>=0.31.0,<0.32", "appdirs"],
     packages=find_packages(),
     zip_safe=False,
     cmdclass=cmdclass,
