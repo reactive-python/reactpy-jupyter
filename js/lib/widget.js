@@ -1,4 +1,5 @@
 var widgets = require("@jupyter-widgets/base");
+var idomClientReact = require("idom-client-react");
 var _ = require("lodash");
 
 var IdomModel = widgets.DOMWidgetModel.extend({
@@ -9,7 +10,6 @@ var IdomModel = widgets.DOMWidgetModel.extend({
     _view_module: "idom-client-jupyter",
     _model_module_version: "0.4.0",
     _view_module_version: "0.4.0",
-    _jupyter_server_base_url: null,
   }),
 });
 
@@ -28,49 +28,47 @@ class IdomView extends widgets.DOMWidgetView {
     super(options);
     this.render = this.render.bind(this);
     this.remove = this.remove.bind(this);
-    this.clientModulePromise = eval(
-      `import('${
-        jupyterServerBaseUrl + this.model.attributes._client_module_url
-      }')`
-    );
   }
 
   render() {
     this.viewID = _nextViewID.id;
     _nextViewID.id++;
 
-    this.clientModulePromise.then((idomClientReact) => {
-      var saveUpdateHook = (updateHook) => {
-        this.model.on("msg:custom", (msg, buffers) => {
-          if (msg.viewID == this.viewID) {
-            updateHook(...msg.data);
-          }
-        });
-        this.model.send({
-          type: "client-ready",
-          viewID: this.viewID,
-          data: null,
-        });
-      };
+    var saveUpdateHook = (updateHook) => {
+      this.model.on("msg:custom", (msg, buffers) => {
+        if (msg.viewID == this.viewID) {
+          updateHook(...msg.data);
+        }
+      });
+      this.send({
+        type: "client-ready",
+        viewID: this.viewID,
+        data: null,
+      });
+    };
 
-      var sendEvent = (event) => {
-        this.model.send({
-          type: "dom-event",
-          viewID: this.viewID,
-          data: event,
-        });
-      };
+    var sendEvent = (event) => {
+      this.send({
+        type: "dom-event",
+        viewID: this.viewID,
+        data: event,
+      });
+    };
 
-      idomClientReact.mountLayout(
-        this.el,
-        saveUpdateHook,
-        sendEvent,
-        concatAndResolveUrl(
-          this.model.attributes._jupyter_server_base_url ||
-            jupyterServerBaseUrl,
-          "_idom_web_modules"
-        )
+    const importSourceBaseUrl = concatAndResolveUrl(
+      this.model.attributes._jupyter_server_base_url || jupyterServerBaseUrl,
+      "_idom_web_modules"
+    );
+    var loadImportSource = (source, sourceType) => {
+      return import( /* webpackIgnore: true */
+        sourceType == "NAME" ? `${importSourceBaseUrl}/${source}` : source
       );
+    };
+
+    idomClientReact.mountLayout(this.el, {
+      saveUpdateHook,
+      sendEvent,
+      loadImportSource,
     });
   }
 
