@@ -13,7 +13,7 @@ __all__ = [
     "load_ipython_extension",
     "unload_ipython_extension",
     "set_jupyter_server_base_url",
-    "jupyter_server_extension"
+    "jupyter_server_extension",
 ]
 
 
