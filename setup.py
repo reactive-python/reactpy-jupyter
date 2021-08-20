@@ -67,7 +67,7 @@ setup_args = dict(
     description="A client for IDOM implemented using Jupyter widgets",
     long_description=LONG_DESCRIPTION,
     include_package_data=True,
-    install_requires=["ipywidgets>=7.6.0", "idom>=0.31.0,<0.32", "appdirs"],
+    install_requires=["ipywidgets>=7.6.0", "idom>=0.32.0,<0.33", "appdirs"],
     packages=find_packages(),
     zip_safe=False,
     cmdclass=cmdclass,
