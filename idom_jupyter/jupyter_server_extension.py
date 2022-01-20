@@ -15,7 +15,7 @@ def _load_jupyter_server_extension(notebook_app: NotebookApp):
     base_url = web_app.settings["base_url"]
     route_pattern = urljoin(base_url, rf"_idom_web_modules/(.*)")
     web_app.add_handlers(
-        host_pattern=".*$",
+        host_pattern=r".*$",
         host_handlers=[
             (
                 route_pattern,
