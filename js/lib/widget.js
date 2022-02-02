@@ -8,8 +8,8 @@ var IdomModel = widgets.DOMWidgetModel.extend({
     _view_name: "IdomView",
     _model_module: "idom-client-jupyter",
     _view_module: "idom-client-jupyter",
-    _model_module_version: "0.4.0",
-    _view_module_version: "0.4.0",
+    _model_module_version: "0.7.0",
+    _view_module_version: "0.7.0",
   }),
 });
 
@@ -55,12 +55,24 @@ class IdomView extends widgets.DOMWidgetView {
       });
     };
 
-    const importSourceBaseUrl = concatAndResolveUrl(
-      this.model.attributes._jupyter_server_base_url || jupyterServerBaseUrl,
-      "_idom_web_modules"
-    );
+    let importSourceBaseUrl;
+    if (jupyterServerBaseUrl) {
+      importSourceBaseUrl = concatAndResolveUrl(
+        jupyterServerBaseUrl,
+        "_idom_web_modules"
+      );
+    } else {
+      importSourceBaseUrl = this.model.attributes._import_source_base_url;
+    }
+    if (!importSourceBaseUrl) {
+      console.error(
+        "No Jupyter Server base URL could be discovered and no import source base URL was configured."
+      );
+    }
+
     var loadImportSource = (source, sourceType) => {
-      return import( /* webpackIgnore: true */
+      return import(
+        /* webpackIgnore: true */
         sourceType == "NAME" ? `${importSourceBaseUrl}/${source}` : source
       );
     };
