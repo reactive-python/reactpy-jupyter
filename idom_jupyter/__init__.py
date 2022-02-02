@@ -2,7 +2,8 @@ from ._version import version_info  # noqa
 from ._version import __version__  # noqa
 
 from . import jupyter_server_extension
-from .widget import LayoutWidget, widgetize, run, set_jupyter_server_base_url
+from .import_resources import setup_import_resources
+from .widget import LayoutWidget, widgetize, run, set_import_source_base_url
 from .ipython_extension import load_ipython_extension, unload_ipython_extension
 
 
@@ -12,9 +13,12 @@ __all__ = [
     "run",
     "load_ipython_extension",
     "unload_ipython_extension",
-    "set_jupyter_server_base_url",
+    "set_import_source_base_url",
     "jupyter_server_extension",
 ]
+
+
+setup_import_resources()
 
 
 def _jupyter_labextension_paths():

@@ -13,12 +13,13 @@ from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
 from idom.core.dispatcher import VdomJsonPatch, render_json_patch
 
 
-_JUPYTER_SERVER_BASE_URL = ""
+_IMPORT_SOURCE_BASE_URL = ""
 
 
-def set_jupyter_server_base_url(base_url):
-    global _JUPYTER_SERVER_BASE_URL
-    _JUPYTER_SERVER_BASE_URL = base_url
+def set_import_source_base_url(base_url):
+    """Fallback URL for import sources, if no Jupyter Server is discovered by the client"""
+    global _IMPORT_SOURCE_BASE_URL
+    _IMPORT_SOURCE_BASE_URL = base_url
 
 
 def run(constructor):
@@ -56,14 +57,14 @@ class LayoutWidget(widgets.DOMWidget):
     _model_module = Unicode("idom-client-jupyter").tag(sync=True)
 
     # Version of the front-end module containing widget view
-    _view_module_version = Unicode("^0.4.0").tag(sync=True)
+    _view_module_version = Unicode("^0.7.0").tag(sync=True)
     # Version of the front-end module containing widget model
-    _model_module_version = Unicode("^0.4.0").tag(sync=True)
+    _model_module_version = Unicode("^0.7.0").tag(sync=True)
 
-    _jupyter_server_base_url = Unicode().tag(sync=True)
+    _import_source_base_url = Unicode().tag(sync=True)
 
     def __init__(self, component: ComponentType):
-        super().__init__(_jupyter_server_base_url=_JUPYTER_SERVER_BASE_URL)
+        super().__init__(_import_source_base_url=_IMPORT_SOURCE_BASE_URL)
         self._idom_model = {}
         self._idom_views = set()
         self._idom_layout = Layout(component)
