@@ -1,4 +1,5 @@
 from typing import Any
+from pathlib import Path
 from urllib.parse import urljoin
 
 from appdirs import user_data_dir
@@ -13,7 +14,8 @@ except ImportError:
     from idom.config import IDOM_WED_MODULES_DIR as IDOM_WEB_MODULES_DIR
 
 
-IDOM_WEB_MODULES_DIR.current = user_data_dir("idom-jupyter", "idom-team")
+IDOM_WEB_MODULES_DIR.current = Path(user_data_dir("idom-jupyter", "idom-team"))
+IDOM_WEB_MODULES_DIR.current.mkdir(parents=True, exist_ok=True)
 IDOM_RESOURCE_BASE_PATH = "_idom_web_modules"
 
 
