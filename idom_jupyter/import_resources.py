@@ -2,7 +2,7 @@ import logging
 import socket
 from uuid import uuid4
 from contextlib import closing
-from multiprocessing import Process
+from threading import Thread
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
 import requests
@@ -27,12 +27,14 @@ def setup_import_resources():
     )
     serve_dir = str(IDOM_WEB_MODULES_DIR.current)
 
-    proc = Process(
+    thread = Thread(
         target=_run_simple_static_file_server,
         args=(host, port, serve_dir),
         daemon=True,
     )
-    proc.start()
+    thread.start()
+
+    set_import_source_base_url(f"http://{host}:{port}/")
 
 
 def _try_to_set_import_source_base_url() -> bool:
