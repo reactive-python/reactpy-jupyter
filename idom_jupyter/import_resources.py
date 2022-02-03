@@ -28,7 +28,8 @@ def setup_import_resources():
     serve_dir = str(IDOM_WEB_MODULES_DIR.current)
 
     proc = Process(
-        target=lambda: _run_simple_static_file_server(host, port, serve_dir),
+        target=_run_simple_static_file_server,
+        args=(host, port, serve_dir),
         daemon=True,
     )
     proc.start()
