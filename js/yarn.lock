@@ -1254,10 +1254,10 @@ icss-utils@^5.0.0, icss-utils@^5.1.0:
   resolved "https://registry.yarnpkg.com/icss-utils/-/icss-utils-5.1.0.tgz#c6be6858abd013d768e98366ae47e25d5887b1ae"
   integrity sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==
 
-idom-client-react@^0.36.0:
-  version "0.36.0"
-  resolved "https://registry.yarnpkg.com/idom-client-react/-/idom-client-react-0.36.0.tgz#51126b10cfc033705a4880fe02d37301d3177050"
-  integrity sha512-mK/bvsPOLOMxgiItZxSbREMSKne7s244UHuvr0lD1IJ1uSEg9jpgz2YzkX4oPgOVd3j6MydJ/6XmEObsoYq3pQ==
+idom-client-react@^0.36.3:
+  version "0.36.3"
+  resolved "https://registry.yarnpkg.com/idom-client-react/-/idom-client-react-0.36.3.tgz#4eba80733196558f8b3f2f0dcea6ac73488ac546"
+  integrity sha512-nWMy1cSwPe6N9k1EHendLPtLXH3n7JCfwSfApQEtbq4ngseHLlIG2inSLP68MqDcd9HwV8y0837QF0C4dhqwvw==
   dependencies:
     fast-json-patch "^3.0.0-1"
     htm "^3.0.3"
