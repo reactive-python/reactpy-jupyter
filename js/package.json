@@ -1,6 +1,6 @@
 {
   "name": "idom-client-jupyter",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A client for IDOM implemented using Jupyter widgets",
   "author": "Ryan Morshead",
   "main": "lib/index.js",
