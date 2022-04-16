@@ -8,8 +8,8 @@ var IdomModel = widgets.DOMWidgetModel.extend({
     _view_name: "IdomView",
     _model_module: "idom-client-jupyter",
     _view_module: "idom-client-jupyter",
-    _model_module_version: "0.7.0",
-    _view_module_version: "0.7.0",
+    _model_module_version: "0.9.0",
+    _view_module_version: "0.9.0",
   }),
 });
 
