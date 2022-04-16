@@ -4,13 +4,13 @@ import asyncio
 from functools import wraps
 from threading import Thread
 from queue import Queue as SyncQueue
-from idom.core.proto import ComponentType
+from idom.core.types import ComponentType
 
 import ipywidgets as widgets
 from IPython.display import display as ipython_display
 from traitlets import Unicode
 from idom.core.layout import Layout, LayoutEvent, LayoutUpdate
-from idom.core.dispatcher import VdomJsonPatch, render_json_patch
+from idom.core.serve import VdomJsonPatch, render_json_patch
 
 
 _IMPORT_SOURCE_BASE_URL = ""
@@ -57,9 +57,9 @@ class LayoutWidget(widgets.DOMWidget):
     _model_module = Unicode("idom-client-jupyter").tag(sync=True)
 
     # Version of the front-end module containing widget view
-    _view_module_version = Unicode("^0.8.0").tag(sync=True)
+    _view_module_version = Unicode("^0.9.0").tag(sync=True)
     # Version of the front-end module containing widget model
-    _model_module_version = Unicode("^0.8.0").tag(sync=True)
+    _model_module_version = Unicode("^0.9.0").tag(sync=True)
 
     _import_source_base_url = Unicode().tag(sync=True)
 
@@ -90,7 +90,7 @@ class LayoutWidget(widgets.DOMWidget):
                 self._idom_views.remove(message["viewID"])
 
     async def _idom_layout_render_loop(self):
-        with self._idom_layout:
+        async with self._idom_layout:
             while True:
                 diff = await render_json_patch(self._idom_layout)
                 self._idom_model = diff.apply_to(self._idom_model)
