@@ -9,6 +9,7 @@ include idom-client-jupyter.json
 
 include LICENSE
 include setup.py
+include setup.cfg
 include pyproject.toml
 include install.json
 

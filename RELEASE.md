@@ -1,25 +1,53 @@
-To release a new version of the idom-jupyter Python library on PyPI:
+# Release
 
-- Update `_version.py` (set release version, remove 'dev')
-- git add the `_version.py` file and git commit
-- ```
-  python setup.py sdist bdist_wheel
-  twine upload dist/*
-  git tag -a X.X.X -m 'comment'
-  git add and git commit
-  git push
-  git push --tags
-  ```
+Before doing a release, check to see if there are any outstanding changes or untracked files:
 
-To release a new version of idom-client-jupyter on NPM:
+```
+git status
+git clean -fdxn
+```
 
-- Update `js/package.json` with new npm package version
-- Update the following attributes on your widget implementations in the Python and Javascript packages:
-  - `_view_module_version`
-  - `_model_module_version`
-- ```
-  # clean out the `dist` and `node_modules` directories
-  git clean -fdx
-  npm install
-  npm publish
-  ```
+Commit changes, and make sure that any untracked files can be deleted. Then clean the repository:
+
+```
+git clean -fdx # actually delete untracked files
+```
+
+## Javascript release
+
+To release a new version of idom-client-jupyter on NPM, first register for an NPM account [here](https://www.npmjs.com/), then log in with `yarn login`. Then:
+
+1. Update `js/package.json` with the new npm package version
+2. Build and publish the npm package inside the `js/` directory:
+
+   ```
+   cd js/
+   yarn install
+   yarn publish
+   cd ..
+   ```
+
+## Python release
+
+To release a new version of idom_jupyter on PyPI, first make sure that the `build` package is installed: `pip install build`.
+
+1. Update `idom_jupyter/_version.py`:
+   - Update `__version__`
+   - Update `NPM_PACKAGE_RANGE` if necessary
+2. Commit changes to `_version.py` and tag the release
+   ```
+   git add idom_jupyter/_version.py
+   git tag -a X.X.X -m 'comment'
+   ```
+3. Generate Python packages and upload to PyPI:
+   ```
+   python -m build
+   twine check dist/*
+   twine upload dist/*
+   ```
+4. Update `_version.py` (add 'dev' and increment minor)
+   ```
+   git commit -a -m 'Back to dev'
+   git push
+   git push --tags
+   ```

@@ -1,76 +1,33 @@
-from __future__ import print_function
+from __future__ import annotations
+
 from setuptools import setup, find_packages
-import os
-from os.path import join as pjoin
-from distutils import log
+from pathlib import Path
 
 from jupyter_packaging import (
     create_cmdclass,
     install_npm,
     ensure_targets,
     combine_commands,
-    get_version,
 )
 
+# --------------------------------------------------------------------------------------
+# Common Constants
+# --------------------------------------------------------------------------------------
 
-here = os.path.dirname(os.path.abspath(__file__))
+NAME = "idom_jupyter"
+ROOT_DIR = Path(__file__).resolve().parent
 
-log.set_verbosity(log.DEBUG)
-log.info("setup.py entered")
-log.info("$PATH=%s" % os.environ["PATH"])
+# --------------------------------------------------------------------------------------
+# Package Definition
+# --------------------------------------------------------------------------------------
 
-name = "idom_jupyter"
-LONG_DESCRIPTION = "A client for IDOM implemented using Jupyter widgets"
-
-# Get idom_jupyter version
-version = get_version(pjoin(name, "_version.py"))
-
-js_dir = pjoin(here, "js")
-
-# Representative files that should exist after a successful build
-jstargets = [
-    pjoin(js_dir, "dist", "index.js"),
-]
-
-data_files_spec = [
-    (
-        "share/jupyter/nbextensions/idom-client-jupyter",
-        "idom_jupyter/nbextension",
-        "*.*",
-    ),
-    (
-        "share/jupyter/labextensions/idom-client-jupyter",
-        "idom_jupyter/labextension",
-        "**",
-    ),
-    (
-        "share/jupyter/labextensions/idom-client-jupyter",
-        ".",
-        "install.json",
-    ),
-    (
-        "etc/jupyter",
-        "jupyter-config",
-        "**/*.json",
-    ),
-]
-
-cmdclass = create_cmdclass("jsdeps", data_files_spec=data_files_spec)
-cmdclass["jsdeps"] = combine_commands(
-    install_npm(js_dir, npm=["yarn"], build_cmd="build"),
-    ensure_targets(jstargets),
-)
-
-setup_args = dict(
-    name=name,
-    version=version,
+package = dict(
+    name=NAME,
     description="A client for IDOM implemented using Jupyter widgets",
-    long_description=LONG_DESCRIPTION,
     include_package_data=True,
-    install_requires=["ipywidgets>=7.6.0", "idom>=0.38.1,<0.39", "appdirs", "requests"],
+    install_requires=["ipywidgets>=7.6.0", "idom>=0.42,<0.43", "appdirs", "requests"],
     packages=find_packages(),
     zip_safe=False,
-    cmdclass=cmdclass,
     author="Ryan Morshead",
     author_email="ryan.morshead@gmail.com",
     url="https://github.com/idom-team/idom-jupyter",
@@ -92,4 +49,54 @@ setup_args = dict(
     ],
 )
 
-setup(**setup_args)
+# --------------------------------------------------------------------------------------
+# Python Package Version
+# --------------------------------------------------------------------------------------
+
+_version_module = {}
+exec((ROOT_DIR / NAME / "_version.py").read_text(), _version_module)
+package["version"] = _version_module["__version__"]
+
+# --------------------------------------------------------------------------------------
+# Long Description
+# --------------------------------------------------------------------------------------
+
+package["long_description"] = (ROOT_DIR / "README.md").read_text()
+package["long_description_content_type"] = "text/markdown"
+
+# --------------------------------------------------------------------------------------
+# Build Javascript
+# --------------------------------------------------------------------------------------
+
+JS_DIR = ROOT_DIR / "js"
+
+# Representative files that should exist after a successful build
+jstargets = [JS_DIR / "dist" / "index.js"]
+
+data_files_spec = [
+    (
+        "share/jupyter/nbextensions/idom-client-jupyter",
+        "idom_jupyter/nbextension",
+        "*.*",
+    ),
+    (
+        "share/jupyter/labextensions/idom-client-jupyter",
+        "idom_jupyter/labextension",
+        "**",
+    ),
+    ("share/jupyter/labextensions/idom-client-jupyter", ".", "install.json"),
+    ("etc/jupyter/nbconfig/notebook.d", ".", "idom-client-jupyter.json"),
+]
+
+cmdclass = create_cmdclass("jsdeps", data_files_spec=data_files_spec)
+cmdclass["jsdeps"] = combine_commands(
+    install_npm(JS_DIR, npm=["yarn"], build_cmd="build:prod"),
+    ensure_targets(jstargets),
+)
+package["cmdclass"] = cmdclass
+
+# -----------------------------------------------------------------------------
+# Install It
+# -----------------------------------------------------------------------------
+
+setup(**package)
