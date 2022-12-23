@@ -1,15 +1,17 @@
-var plugin = require("./index");
-var base = require("@jupyter-widgets/base");
+import { HelloModel, HelloView, version } from "./index";
+import { IJupyterWidgetRegistry } from "@jupyter-widgets/base";
 
-module.exports = {
-  id: "idom-client-jupyter",
-  requires: [base.IJupyterWidgetRegistry],
+export const helloWidgetPlugin = {
+  id: "idom-client-jupyter:plugin",
+  requires: [IJupyterWidgetRegistry],
   activate: function (app, widgets) {
     widgets.registerWidget({
       name: "idom-client-jupyter",
-      version: plugin.version,
-      exports: plugin,
+      version: version,
+      exports: { HelloModel, HelloView },
     });
   },
   autoStart: true,
 };
+
+export default helloWidgetPlugin;
