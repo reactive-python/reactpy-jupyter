@@ -1,17 +1,17 @@
-import { HelloModel, HelloView, version } from "./index";
+import { IdomModel, IdomView, version } from "./index";
 import { IJupyterWidgetRegistry } from "@jupyter-widgets/base";
 
-export const helloWidgetPlugin = {
+export const idomWidgetPlugin = {
   id: "idom-client-jupyter:plugin",
   requires: [IJupyterWidgetRegistry],
   activate: function (app, widgets) {
     widgets.registerWidget({
       name: "idom-client-jupyter",
       version: version,
-      exports: { HelloModel, HelloView },
+      exports: { IdomModel, IdomView },
     });
   },
   autoStart: true,
 };
 
-export default helloWidgetPlugin;
+export default idomWidgetPlugin;

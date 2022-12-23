@@ -1,17 +1,19 @@
-var widgets = require("@jupyter-widgets/base");
-var idomClientReact = require("idom-client-react");
-var _ = require("lodash");
+import { DOMWidgetModel, DOMWidgetView } from "@jupyter-widgets/base";
+import { mountLayout } from "idom-client-react";
 
-var IdomModel = widgets.DOMWidgetModel.extend({
-  defaults: _.extend(widgets.DOMWidgetModel.prototype.defaults(), {
-    _model_name: "IdomModel",
-    _view_name: "IdomView",
-    _model_module: "idom-client-jupyter",
-    _view_module: "idom-client-jupyter",
-    _model_module_version: "0.9.0",
-    _view_module_version: "0.9.0",
-  }),
-});
+export class IdomModel extends DOMWidgetModel {
+  defaults() {
+    return {
+      ...super.defaults(),
+      _model_name: "IdomModel",
+      _view_name: "IdomView",
+      _model_module: "idom-client-jupyter",
+      _view_module: "idom-client-jupyter",
+      _model_module_version: "0.9.1",
+      _view_module_version: "0.9.1",
+    };
+  }
+}
 
 var _nextViewID = { id: 0 };
 
@@ -23,7 +25,7 @@ const jupyterServerBaseUrl = (() => {
   return document.getElementsByTagName("body")[0].getAttribute("data-base-url");
 })();
 
-class IdomView extends widgets.DOMWidgetView {
+export class IdomView extends DOMWidgetView {
   constructor(options) {
     super(options);
     this.render = this.render.bind(this);
@@ -77,7 +79,7 @@ class IdomView extends widgets.DOMWidgetView {
       );
     };
 
-    idomClientReact.mountLayout(this.el, {
+    mountLayout(this.el, {
       saveUpdateHook,
       sendEvent,
       loadImportSource,
@@ -114,8 +116,3 @@ function concatAndResolveUrl(url, concat) {
   }
   return url3.join("/");
 }
-
-module.exports = {
-  IdomModel: IdomModel,
-  IdomView: IdomView,
-};

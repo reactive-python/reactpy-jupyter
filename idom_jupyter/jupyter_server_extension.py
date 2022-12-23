@@ -1,12 +1,12 @@
-from typing import Any
+from __future__ import annotations
+
 from pathlib import Path
 from urllib.parse import urljoin
 
 from appdirs import user_data_dir
+from jupyter_server.serverapp import ServerApp
 from notebook.notebookapp import NotebookApp
 from notebook.base.handlers import AuthenticatedFileHandler
-
-from tornado.web import Application
 
 try:
     from idom.config import IDOM_WEB_MODULES_DIR
@@ -19,8 +19,8 @@ IDOM_WEB_MODULES_DIR.current.mkdir(parents=True, exist_ok=True)
 IDOM_RESOURCE_BASE_PATH = "_idom_web_modules"
 
 
-def _load_jupyter_server_extension(notebook_app: NotebookApp):
-    web_app: Application = notebook_app.web_app
+def _load_jupyter_server_extension(server_app: ServerApp | NotebookApp):
+    web_app = server_app.web_app
     base_url = web_app.settings["base_url"]
     route_pattern = urljoin(base_url, rf"{IDOM_RESOURCE_BASE_PATH}/(.*)")
     web_app.add_handlers(
