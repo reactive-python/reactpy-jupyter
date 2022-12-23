@@ -25,7 +25,13 @@ package = dict(
     name=NAME,
     description="A client for IDOM implemented using Jupyter widgets",
     include_package_data=True,
-    install_requires=["ipywidgets>=7.6.0", "idom>=0.42,<0.43", "appdirs", "requests"],
+    install_requires=[
+        "ipywidgets>=7.6.0",
+        "idom>=0.42,<0.43",
+        "appdirs",
+        "requests",
+        "jupyter_server",
+    ],
     packages=find_packages(),
     zip_safe=False,
     author="Ryan Morshead",
@@ -84,8 +90,16 @@ data_files_spec = [
         "idom_jupyter/labextension",
         "**",
     ),
-    ("share/jupyter/labextensions/idom-client-jupyter", ".", "install.json"),
-    ("etc/jupyter/nbconfig/notebook.d", ".", "idom-client-jupyter.json"),
+    (
+        "share/jupyter/labextensions/idom-client-jupyter",
+        ".",
+        "install.json",
+    ),
+    (
+        "etc/jupyter",
+        "jupyter-config",
+        "**/*.json",
+    ),
 ]
 
 cmdclass = create_cmdclass("jsdeps", data_files_spec=data_files_spec)
