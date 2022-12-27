@@ -98,7 +98,7 @@ data_files_spec = [
     (
         "etc/jupyter",
         "jupyter-config",
-        "**/*.json",
+        "**",
     ),
 ]
 
