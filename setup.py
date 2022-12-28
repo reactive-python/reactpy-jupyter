@@ -33,6 +33,7 @@ package = dict(
         "requests",
         "jupyter_server",
         "notebook",
+        "typing_extensions",
     ],
     packages=find_packages(),
     zip_safe=False,

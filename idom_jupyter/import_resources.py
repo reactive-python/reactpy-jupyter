@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import socket
 from uuid import uuid4
@@ -15,7 +17,7 @@ from .widget import set_import_source_base_url
 logger = logging.getLogger(__name__)
 
 
-def setup_import_resources():
+def setup_import_resources() -> None:
     if _try_to_set_import_source_base_url():
         return None
 
@@ -67,7 +69,7 @@ def _try_to_set_import_source_base_url() -> bool:
     return False
 
 
-def _run_simple_static_file_server(host, port, directory):
+def _run_simple_static_file_server(host: str, port: int, directory: str) -> None:
     class CORSRequestHandler(SimpleHTTPRequestHandler):
         def end_headers(self):
             self.send_header("Access-Control-Allow-Origin", "*")
