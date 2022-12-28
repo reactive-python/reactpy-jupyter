@@ -1,11 +1,10 @@
 graft idom_jupyter/nbextension
 graft idom_jupyter/labextension
+graft jupyter-config
 
 graft js
 graft tests
 prune **/node_modules
-
-include idom-client-jupyter.json
 
 include LICENSE
 include setup.py
