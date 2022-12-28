@@ -32,6 +32,7 @@ package = dict(
         "appdirs",
         "requests",
         "jupyter_server",
+        "notebook",
     ],
     packages=find_packages(),
     zip_safe=False,
@@ -103,35 +104,12 @@ data_files_spec = [
     ),
 ]
 
-package["cmdclass"] = {
-    **create_cmdclass("jsdeps", data_files_spec=data_files_spec),
-    "jsdeps": combine_commands(
-        install_npm(JS_DIR, npm=["yarn"], build_cmd="build:prod"),
-        ensure_targets(jstargets),
-    ),
-}
-
-# --------------------------------------------------------------------------------------
-# Build Pth File
-# --------------------------------------------------------------------------------------
-
-BuildPyBase: type[build_py] = package["cmdclass"]["build_py"]
-
-
-class BuildPy(BuildPyBase):
-    """Include the .pth file for this project, in the generated wheel."""
-
-    def run(self):
-        super().run()
-        pth_file = f"{NAME}.pth"
-        self.copy_file(
-            str(ROOT_DIR / pth_file),
-            str(Path(self.build_lib) / pth_file),
-            preserve_mode=0,
-        )
-
-
-package["cmdclass"] = {**package["cmdclass"], "build_py": BuildPy}
+cmdclass = create_cmdclass("jsdeps", data_files_spec=data_files_spec)
+cmdclass["jsdeps"] = combine_commands(
+    install_npm(JS_DIR, npm=["yarn"], build_cmd="build:prod"),
+    ensure_targets(jstargets),
+)
+package["cmdclass"] = cmdclass
 
 # -----------------------------------------------------------------------------
 # Install It

@@ -1,0 +1,3 @@
+twine
+jupyter-packaging
+jupyter-repo2docker
