@@ -19,7 +19,7 @@ IDOM_WEB_MODULES_DIR.current.mkdir(parents=True, exist_ok=True)
 IDOM_RESOURCE_BASE_PATH = "_idom_web_modules"
 
 
-def _load_jupyter_server_extension(server_app: ServerApp | NotebookApp):
+def _load_jupyter_server_extension(server_app: ServerApp | NotebookApp) -> None:
     web_app = server_app.web_app
     base_url = web_app.settings["base_url"]
     route_pattern = urljoin(base_url, rf"{IDOM_RESOURCE_BASE_PATH}/(.*)")

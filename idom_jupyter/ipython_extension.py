@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 from functools import partial
 
 from idom.core.component import ComponentType
 from IPython import get_ipython
-from IPython.core.interactiveshell import InteractiveShell
+from IPython.core.interactiveshell import InteractiveShell, ExecutionResult
 from IPython.display import display
 
 from .widget import LayoutWidget
@@ -23,14 +25,14 @@ def load_ipython_extension(ipython: InteractiveShell) -> None:
         _EXTENSION_LOADED = True
 
 
-def unload_ipython_extension(ipython):
+def unload_ipython_extension(ipython: InteractiveShell) -> None:
     global _POST_RUN_CELL_HOOK, _EXTENSION_LOADED
     ipython.events.unregister("post_run_cell", _POST_RUN_CELL_HOOK)
     _POST_RUN_CELL_HOOK = None
     _EXTENSION_LOADED = False
 
 
-def _post_run_cell(ipython: InteractiveShell, result):
+def _post_run_cell(ipython: InteractiveShell, result: ExecutionResult) -> None:
     if isinstance(result.result, ComponentType):
         display(LayoutWidget(result.result))
 

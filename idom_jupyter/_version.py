@@ -1,15 +1,9 @@
 # Module version
-version_info = (0, 7, 6, "final", 0)
+version_info = 0, 7, 6, "final", 0
 
-# Module version stage suffix map
-_specifier_ = {"alpha": "a", "beta": "b", "candidate": "rc", "final": ""}
+major, minor, patch, stage_name, stage_num = version_info
+stage_name = {"alpha": "a", "beta": "b", "candidate": "rc", "final": ""}[stage_name]
+stage = f'{stage_name}{stage_num}' if stage_name else ''
 
 # Module version accessible using idom_jupyter.__version__
-__version__ = "%s.%s.%s%s" % (
-    version_info[0],
-    version_info[1],
-    version_info[2],
-    ""
-    if version_info[3] == "final"
-    else _specifier_[version_info[3]] + str(version_info[4]),
-)
+__version__ = f"{major}.{minor}.{patch}{stage}"
