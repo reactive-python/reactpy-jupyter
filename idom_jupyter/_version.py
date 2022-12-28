@@ -1,5 +1,5 @@
 # Module version
-version_info = 0, 7, 6, "final", 0
+version_info = 0, 7, 7, "final", 0
 
 major, minor, patch, stage_name, stage_num = version_info
 stage_name = {"alpha": "a", "beta": "b", "candidate": "rc", "final": ""}[stage_name]
