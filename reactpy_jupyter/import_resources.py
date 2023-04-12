@@ -10,7 +10,7 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 import requests
 from notebook import notebookapp
 
-from .jupyter_server_extension import IDOM_RESOURCE_BASE_PATH, IDOM_WEB_MODULES_DIR
+from .jupyter_server_extension import REACTPY_RESOURCE_BASE_PATH, REACTPY_WEB_MODULES_DIR
 from .widget import set_import_source_base_url
 
 
@@ -27,7 +27,7 @@ def setup_import_resources() -> None:
     logger.debug(
         f"Serving web modules via local static file server at http://{host}:{port}/"
     )
-    serve_dir = str(IDOM_WEB_MODULES_DIR.current)
+    serve_dir = str(REACTPY_WEB_MODULES_DIR.current)
 
     thread = Thread(
         target=_run_simple_static_file_server,
@@ -43,7 +43,7 @@ def _try_to_set_import_source_base_url() -> bool:
     # Try to see if there's a local server we should use. This might happen when running
     # in a notebook from within VSCode
     _temp_file_name = f"__temp_{uuid4().hex}__"
-    _temp_file = IDOM_WEB_MODULES_DIR.current / _temp_file_name
+    _temp_file = REACTPY_WEB_MODULES_DIR.current / _temp_file_name
     _temp_file.touch()
     for _server_info in notebookapp.list_running_servers():
         if _server_info["hostname"] not in ("localhost", "127.0.0.1"):
@@ -52,7 +52,7 @@ def _try_to_set_import_source_base_url() -> bool:
         _resource_url_parts = [
             _server_info["url"].rstrip("/"),
             _server_info["base_url"].strip("/"),
-            IDOM_RESOURCE_BASE_PATH,
+            REACTPY_RESOURCE_BASE_PATH,
         ]
         _resource_url = "/".join(filter(None, _resource_url_parts))
         _temp_file_url = _resource_url + "/" + _temp_file_name

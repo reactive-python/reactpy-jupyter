@@ -1,7 +1,0 @@
-{
-  "ServerApp": {
-    "jpserver_extensions": {
-      "idom_jupyter.jupyter_server_extension": true
-    }
-  }
-}

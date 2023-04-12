@@ -15,7 +15,7 @@ git clean -fdx # actually delete untracked files
 
 ## Javascript release
 
-To release a new version of idom-client-jupyter on NPM, first register for an NPM account [here](https://www.npmjs.com/), then log in with `yarn login`. Then:
+To release a new version of reactpy-client-jupyter on NPM, first register for an NPM account [here](https://www.npmjs.com/), then log in with `yarn login`. Then:
 
 1. Update `js/package.json` with the new npm package version
 2. Build and publish the npm package inside the `js/` directory:
@@ -29,14 +29,14 @@ To release a new version of idom-client-jupyter on NPM, first register for an NP
 
 ## Python release
 
-To release a new version of idom_jupyter on PyPI, first make sure that the `build` package is installed: `pip install build`.
+To release a new version of reactpy_jupyter on PyPI, first make sure that the `build` package is installed: `pip install build`.
 
-1. Update `idom_jupyter/_version.py`:
+1. Update `reactpy_jupyter/_version.py`:
    - Update `__version__`
    - Update `NPM_PACKAGE_RANGE` if necessary
 2. Commit changes to `_version.py` and tag the release
    ```
-   git add idom_jupyter/_version.py
+   git add reactpy_jupyter/_version.py
    git tag -a X.X.X -m 'comment'
    ```
 3. Generate Python packages and upload to PyPI:

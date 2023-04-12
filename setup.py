@@ -1,119 +1,179 @@
-from __future__ import annotations
+from __future__ import print_function
 
-from setuptools import setup, find_packages
-from setuptools.command.build_py import build_py
+import pipes
+import shutil
+import subprocess
+import sys
+import traceback
+from logging import StreamHandler, getLogger
 from pathlib import Path
 
-from jupyter_packaging import (
-    create_cmdclass,
-    install_npm,
-    ensure_targets,
-    combine_commands,
-)
+from setuptools import find_packages, setup
+from setuptools.command.develop import develop
+from setuptools.command.sdist import sdist
+
+
+if sys.platform == "win32":
+    from subprocess import list2cmdline
+else:
+
+    def list2cmdline(cmd_list):
+        return " ".join(map(pipes.quote, cmd_list))
+
+
+log = getLogger()
+log.addHandler(StreamHandler(sys.stdout))
+
 
 # --------------------------------------------------------------------------------------
-# Common Constants
+# Basic Constants
 # --------------------------------------------------------------------------------------
 
-NAME = "idom_jupyter"
-ROOT_DIR = Path(__file__).resolve().parent
+
+# the name of the project
+NAME = "reactpy_jupyter"
+
+# basic paths used to gather files
+ROOT_DIR = Path(__file__).parent
+
 
 # --------------------------------------------------------------------------------------
 # Package Definition
 # --------------------------------------------------------------------------------------
 
-package = dict(
-    name=NAME,
-    description="A client for IDOM implemented using Jupyter widgets",
-    include_package_data=True,
-    install_requires=[
-        "ipywidgets>=7.6.0",
-        "idom>=0.42,<0.43",
+
+package = {
+    "name": NAME,
+    "python_requires": ">=3.7",
+    "packages": find_packages(ROOT_DIR, include="reactpy_jupyter.*"),
+    "description": "It's React, but in Python",
+    "author": "Ryan Morshead",
+    "author_email": "ryan.morshead@gmail.com",
+    "url": "https://github.com/reactive-python/reactpy",
+    "license": "MIT",
+    "platforms": "Linux, Mac OS X, Windows",
+    "keywords": ["interactive", "widgets", "DOM", "React"],
+    "include_package_data": True,
+    "zip_safe": False,
+    "classifiers": [
+        "Environment :: Web Environment",
+        "Framework :: AsyncIO",
+        "Framework :: Flask",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Topic :: Software Development :: User Interfaces",
+        "Topic :: Software Development :: Widget Sets",
+        "Typing :: Typed",
+    ],
+}
+
+
+# --------------------------------------------------------------------------------------
+# Library Version
+# --------------------------------------------------------------------------------------
+
+pkg_root_init_file = ROOT_DIR / NAME / "__init__.py"
+for line in pkg_root_init_file.read_text().split("\n"):
+    if line.startswith('__version__ = "') and line.endswith('"  # DO NOT MODIFY'):
+        package["version"] = (
+            line
+            # get assignment value
+            .split("=", 1)[1]
+            # remove "DO NOT MODIFY" comment
+            .split("#", 1)[0]
+            # clean up leading/trailing space
+            .strip()
+            # remove the quotes
+            [1:-1]
+        )
+        break
+else:
+    print(f"No version found in {pkg_root_init_file}")
+    sys.exit(1)
+
+
+# --------------------------------------------------------------------------------------
+# Requirements
+# --------------------------------------------------------------------------------------
+
+package["install_requires"] = [
+        "anywidget<1",
+        "reactpy>=1.0.0",
         "appdirs",
         "requests",
         "jupyter_server",
         "notebook",
         "typing_extensions",
-    ],
-    packages=find_packages(),
-    zip_safe=False,
-    author="Ryan Morshead",
-    author_email="ryan.morshead@gmail.com",
-    url="https://github.com/idom-team/idom-jupyter",
-    keywords=[
-        "ipython",
-        "jupyter",
-        "widgets",
-    ],
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Framework :: IPython",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Science/Research",
-        "Topic :: Multimedia :: Graphics",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-    ],
-)
+    ]
 
 # --------------------------------------------------------------------------------------
-# Python Package Version
+# Library Description
 # --------------------------------------------------------------------------------------
 
-_version_module = {}
-exec((ROOT_DIR / NAME / "_version.py").read_text(), _version_module)
-package["version"] = _version_module["__version__"]
 
-# --------------------------------------------------------------------------------------
-# Long Description
-# --------------------------------------------------------------------------------------
+with (ROOT_DIR / "README.md").open() as f:
+    long_description = f.read()
 
-package["long_description"] = (ROOT_DIR / "README.md").read_text()
+package["long_description"] = long_description
 package["long_description_content_type"] = "text/markdown"
+
+
+# --------------------------------------------------------------------------------------
+# Command Line Interface
+# --------------------------------------------------------------------------------------
+
+package["entry_points"] = {"console_scripts": ["reactpy=reactpy.__main__:app"]}
 
 # --------------------------------------------------------------------------------------
 # Build Javascript
 # --------------------------------------------------------------------------------------
 
-JS_DIR = ROOT_DIR / "js"
 
-# Representative files that should exist after a successful build
-jstargets = [JS_DIR / "dist" / "index.js"]
+def build_javascript_first(cls):
+    class Command(cls):
+        def run(self):
+            log.info("Installing Javascript...")
+            try:
+                npm = shutil.which("npm")  # this is required on windows
+                if npm is None:
+                    raise RuntimeError("NPM is not installed.")
+                for args in (f"{npm} ci", f"{npm} run build"):
+                    args_list = args.split()
+                    log.info(f"> {list2cmdline(args_list)}")
+                    subprocess.run(args_list, cwd=str(ROOT_DIR), check=True)
+            except Exception:
+                log.error("Failed to install Javascript")
+                log.error(traceback.format_exc())
+                raise
+            else:
+                log.info("Successfully installed Javascript")
+            super().run()
 
-data_files_spec = [
-    (
-        "share/jupyter/nbextensions/idom-client-jupyter",
-        "idom_jupyter/nbextension",
-        "*.*",
-    ),
-    (
-        "share/jupyter/labextensions/idom-client-jupyter",
-        "idom_jupyter/labextension",
-        "**",
-    ),
-    (
-        "share/jupyter/labextensions/idom-client-jupyter",
-        ".",
-        "install.json",
-    ),
-    (
-        "etc/jupyter",
-        "jupyter-config",
-        "**",
-    ),
-]
+    return Command
 
-cmdclass = create_cmdclass("jsdeps", data_files_spec=data_files_spec)
-cmdclass["jsdeps"] = combine_commands(
-    install_npm(JS_DIR, npm=["yarn"], build_cmd="build:prod"),
-    ensure_targets(jstargets),
-)
-package["cmdclass"] = cmdclass
 
-# -----------------------------------------------------------------------------
+package["cmdclass"] = {
+    "sdist": build_javascript_first(sdist),
+    "develop": build_javascript_first(develop),
+}
+
+if sys.version_info < (3, 10, 6):
+    from distutils.command.build import build
+
+    package["cmdclass"]["build"] = build_javascript_first(build)
+else:
+    from setuptools.command.build_py import build_py
+
+    package["cmdclass"]["build_py"] = build_javascript_first(build_py)
+
+
+# --------------------------------------------------------------------------------------
 # Install It
-# -----------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------
 
-setup(**package)
+
+if __name__ == "__main__":
+    setup(**package)

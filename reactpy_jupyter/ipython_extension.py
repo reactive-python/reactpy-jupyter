@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from functools import partial
 
-from idom.core.component import ComponentType
+from reactpy.core.component import ComponentType
 from IPython import get_ipython
 from IPython.core.interactiveshell import InteractiveShell, ExecutionResult
 from IPython.display import display
