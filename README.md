@@ -1,12 +1,12 @@
-# idom-jupyter
+# reactpy-jupyter
 
-A client for [IDOM](https://github.com/idom-team/idom) implemented using Jupyter widgets
+A client for [ReactPy](https://github.com/reactive-python/reactpy) implemented using Jupyter widgets
 
 ## Try It Now!
 
 Check out some live examples by clicking the badge below:
 
-<a href="https://mybinder.org/v2/gh/idom-team/idom-jupyter/main?filepath=notebooks%2Fintroduction.ipynb">
+<a href="https://mybinder.org/v2/gh/reactive-python/reactpy-jupyter/main?urlpath=lab%2Ftree%2Fnotebooks%2Fintroduction.ipynb">
     <img alt="Binder" height="25px" src="https://mybinder.org/badge_logo.svg" />
 </a>
 
@@ -15,7 +15,7 @@ Check out some live examples by clicking the badge below:
 To install use `pip`:
 
 ```
-pip install idom_jupyter
+pip install reactpy_jupyter
 ```
 
 Then, before anything else, do one of the following:
@@ -23,29 +23,29 @@ Then, before anything else, do one of the following:
 1. At the top of your notebook run
 
    ```python
-   import idom_jupyter
+   import reactpy_jupyter
    ```
 
-2. Register `idom_jupyter` as a permanant IPython extension in [your config file](https://ipython.readthedocs.io/en/stable/config/intro.html#introduction-to-ipython-configuration):
+2. Register `reactpy_jupyter` as a permanant IPython extension in [your config file](https://ipython.readthedocs.io/en/stable/config/intro.html#introduction-to-ipython-configuration):
 
    ```python
    c.InteractiveShellApp.extensions = [
-       'idom_jupyter'
+       'reactpy_jupyter'
    ]
    ```
 
 ## Usage
 
-Once you're done [getting started](#getting-started), you can author and display IDOM
+Once you're done [getting started](#getting-started), you can author and display ReactPy
 layouts natively in your Jupyter Notebook:
 
 ```python
-import idom
+import reactpy
 
-@idom.component
+@reactpy.component
 def ClickCount():
-    count, set_count = idom.hooks.use_state(0)
-    return idom.html.button(
+    count, set_count = reactpy.hooks.use_state(0)
+    return reactpy.html.button(
         {"onClick": lambda event: set_count(count + 1)},
         [f"Click count: {count}"],
     )
@@ -53,12 +53,12 @@ def ClickCount():
 ClickCount()
 ```
 
-You can also turn an `idom` element constructor into one that returns an `ipywidget` with
-the `idom_juptyer.widgetize` function. This is useful if you wish to use IDOM in combination
+You can also turn an `reactpy` element constructor into one that returns an `ipywidget` with
+the `reactpy_juptyer.widgetize` function. This is useful if you wish to use ReactPy in combination
 with other Jupyter Widgets as in the following example:
 
 ```python
-ClickCountWidget = idom_jupyter.widgetize(ClickCount)
+ClickCountWidget = reactpy_jupyter.widgetize(ClickCount)
 ipywidgets.Box(
     [
         ClickCountWidget(),
@@ -67,20 +67,20 @@ ipywidgets.Box(
 )
 ```
 
-Alternatively just wrap an `idom` element instance in an `idom_jupyter.LayoutWidget`:
+Alternatively just wrap an `reactpy` element instance in an `reactpy_jupyter.LayoutWidget`:
 
 ```python
 ipywidgets.Box(
     [
-        idom_jupyter.LayoutWidget(ClickCount()),
-        idom_jupyter.LayoutWidget(ClickCount()),
+        reactpy_jupyter.LayoutWidget(ClickCount()),
+        reactpy_jupyter.LayoutWidget(ClickCount()),
     ]
 )
 ```
 
 For a more detailed introduction check out this live demo here:
 
-<a href="https://mybinder.org/v2/gh/idom-team/idom-jupyter/main?filepath=notebooks%2Fintroduction.ipynb">
+<a href="https://mybinder.org/v2/gh/reactive-python/reactpy-jupyter/main?filepath=notebooks%2Fintroduction.ipynb">
     <img alt="Binder" height="25px" src="https://mybinder.org/badge_logo.svg" />
 </a>
 
@@ -88,15 +88,15 @@ For a more detailed introduction check out this live demo here:
 
 For a development installation (requires [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/)),
 
-    $ git clone https://github.com/idom-team/idom-jupyter.git
-    $ cd idom-jupyter
+    $ git clone https://github.com/reactive-python/reactpy-jupyter.git
+    $ cd reactpy-jupyter
     $ pip install -e .
-    $ jupyter nbextension install --py --symlink --overwrite --sys-prefix idom_jupyter
-    $ jupyter nbextension enable --py --sys-prefix idom_jupyter
+    $ jupyter nbextension install --py --symlink --overwrite --sys-prefix reactpy_jupyter
+    $ jupyter nbextension enable --py --sys-prefix reactpy_jupyter
 
 When actively developing your extension for JupyterLab, run the command:
 
-    $ jupyter labextension develop --overwrite idom_jupyter
+    $ jupyter labextension develop --overwrite reactpy_jupyter
 
 Then you need to rebuild the JS when you make a code change:
 
