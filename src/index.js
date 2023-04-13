@@ -10,6 +10,10 @@ export function render(view) {
 let viewID = 0;
 
 class JupyterReactPyClient extends BaseReactPyClient {
+  /**
+   * @param view {DOMWidgetView}
+   * @param viewID {number}
+   */
   constructor(view, viewId) {
     super();
     this.view = view;
@@ -52,6 +56,7 @@ class JupyterReactPyClient extends BaseReactPyClient {
     });
   }
 
+  /** @param message {any} */
   sendMessage(message) {
     this.view.model.send({
       type: "dom-event",
@@ -60,6 +65,7 @@ class JupyterReactPyClient extends BaseReactPyClient {
     });
   }
 
+  /** @param moduleName {string} */
   loadModule(moduleName) {
     return import(`${this.importSourceBaseUrl}/${moduleName}`);
   }
