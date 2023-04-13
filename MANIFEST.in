@@ -1,4 +1,5 @@
 graft reactpy_jupyter/static
+graft jupyter-config
 
 include LICENSE
 include pyproject.toml

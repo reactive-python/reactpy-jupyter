@@ -1,0 +1,7 @@
+{
+  "ServerApp": {
+    "jpserver_extensions": {
+      "reactpy_jupyter.jupyter_server_extension": true
+    }
+  }
+}

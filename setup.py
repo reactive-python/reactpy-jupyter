@@ -11,6 +11,7 @@ from pathlib import Path
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
+from jupyter_packaging import get_data_files
 
 
 if sys.platform == "win32":
@@ -100,14 +101,14 @@ else:
 # --------------------------------------------------------------------------------------
 
 package["install_requires"] = [
-        "anywidget<1",
-        "reactpy>=1.0.0",
-        "appdirs",
-        "requests",
-        "jupyter_server",
-        "notebook",
-        "typing_extensions",
-    ]
+    "anywidget<1",
+    "reactpy>=1.0.0",
+    "appdirs",
+    "requests",
+    "jupyter_server",
+    "notebook",
+    "typing_extensions",
+]
 
 # --------------------------------------------------------------------------------------
 # Library Description
@@ -122,10 +123,18 @@ package["long_description_content_type"] = "text/markdown"
 
 
 # --------------------------------------------------------------------------------------
-# Command Line Interface
+# Jupyter Config Data Files
 # --------------------------------------------------------------------------------------
 
-package["entry_points"] = {"console_scripts": ["reactpy=reactpy.__main__:app"]}
+package["data_files"] = get_data_files(
+    [
+        (
+            "etc/jupyter",
+            "jupyter-config",
+            "**",
+        ),
+    ]
+)
 
 # --------------------------------------------------------------------------------------
 # Build Javascript
