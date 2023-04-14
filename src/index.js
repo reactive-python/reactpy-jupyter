@@ -66,10 +66,14 @@ class JupyterReactPyClient extends BaseReactPyClient {
   }
 
   /** @param moduleName {string} */
-  loadModule(moduleName) {
-    return import(
-      `${window.location.origin}${this.importSourceBaseUrl}/${moduleName}`
-    );
+  async loadModule(moduleName) {
+    // Because import() does not behave directly when running via AnyWidgets. This is
+    // because this code is itself imported and executed via a dynamic import() whose
+    // source is a URL constructed by URL.createObjectURL. This appears to impact both
+    // path resolution as well as CORS. By constrast the fetch() API does not appear to
+    // be impacted by this. So we use fetch() to get the module source instead.
+    const rsp = await fetch(`${this.importSourceBaseUrl}/${moduleName}`);
+    return await import(URL.createObjectURL(await rsp.blob()));
   }
 }
 
