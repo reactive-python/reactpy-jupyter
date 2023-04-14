@@ -67,7 +67,9 @@ class JupyterReactPyClient extends BaseReactPyClient {
 
   /** @param moduleName {string} */
   loadModule(moduleName) {
-    return import(`${this.importSourceBaseUrl}/${moduleName}`);
+    return import(
+      `${window.location.origin}${this.importSourceBaseUrl}/${moduleName}`
+    );
   }
 }
 
