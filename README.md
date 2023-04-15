@@ -91,16 +91,15 @@ For a development installation (requires [Node.js](https://nodejs.org) and [Yarn
     $ git clone https://github.com/reactive-python/reactpy-jupyter.git
     $ cd reactpy-jupyter
     $ pip install -e .
-    $ jupyter nbextension install --py --symlink --overwrite --sys-prefix reactpy_jupyter
-    $ jupyter nbextension enable --py --sys-prefix reactpy_jupyter
 
-When actively developing your extension for JupyterLab, run the command:
+To automatically re-build and refresh Jupyter when making changes start a Vite dev server:
 
-    $ jupyter labextension develop --overwrite reactpy_jupyter
+    $ npx vite
 
-Then you need to rebuild the JS when you make a code change:
+Then, before importing `reactpy_jupyter` set the following environment variable:
 
-    $ cd js
-    $ yarn run build
-
-You then need to refresh the JupyterLab page when your javascript changes.
+```python
+import os
+os.environ["REACTPY_JUPYTER_DEV"] = "1"
+import reactpy_jupyter
+```

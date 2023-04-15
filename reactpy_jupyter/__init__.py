@@ -9,7 +9,7 @@ from .import_resources import setup_import_resources
 from .ipython_extension import load_ipython_extension, unload_ipython_extension
 from .widget import LayoutWidget, run, set_import_source_base_url, widgetize
 
-__version__ = "0.8.0"  # DO NOT MODIFY
+__version__ = "0.8.1"  # DO NOT MODIFY
 
 __all__ = [
     "LayoutWidget",
