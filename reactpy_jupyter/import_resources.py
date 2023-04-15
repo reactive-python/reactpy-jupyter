@@ -2,17 +2,19 @@ from __future__ import annotations
 
 import logging
 import socket
-from uuid import uuid4
 from contextlib import closing
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from threading import Thread
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+from uuid import uuid4
 
 import requests
 from notebook import notebookapp
 
-from .jupyter_server_extension import REACTPY_RESOURCE_BASE_PATH, REACTPY_WEB_MODULES_DIR
+from .jupyter_server_extension import (
+    REACTPY_RESOURCE_BASE_PATH,
+    REACTPY_WEB_MODULES_DIR,
+)
 from .widget import set_import_source_base_url
-
 
 logger = logging.getLogger(__name__)
 

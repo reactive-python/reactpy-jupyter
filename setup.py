@@ -8,11 +8,10 @@ import traceback
 from logging import StreamHandler, getLogger
 from pathlib import Path
 
+from jupyter_packaging import get_data_files
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
-from jupyter_packaging import get_data_files
-
 
 if sys.platform == "win32":
     from subprocess import list2cmdline

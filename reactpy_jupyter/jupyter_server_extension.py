@@ -5,8 +5,8 @@ from urllib.parse import urljoin
 
 from appdirs import user_data_dir
 from jupyter_server.serverapp import ServerApp
-from notebook.notebookapp import NotebookApp
 from notebook.base.handlers import AuthenticatedFileHandler
+from notebook.notebookapp import NotebookApp
 
 try:
     from reactpy.config import REACTPY_WEB_MODULES_DIR
@@ -14,7 +14,9 @@ except ImportError:
     from reactpy.config import REACTPY_WED_MODULES_DIR as REACTPY_WEB_MODULES_DIR
 
 
-REACTPY_WEB_MODULES_DIR.current = Path(user_data_dir("reactpy-jupyter", "reactive-python"))
+REACTPY_WEB_MODULES_DIR.current = Path(
+    user_data_dir("reactpy-jupyter", "reactive-python")
+)
 REACTPY_WEB_MODULES_DIR.current.mkdir(parents=True, exist_ok=True)
 REACTPY_RESOURCE_BASE_PATH = "_reactpy_web_modules"
 

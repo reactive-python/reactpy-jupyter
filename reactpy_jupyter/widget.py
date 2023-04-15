@@ -3,20 +3,19 @@ from __future__ import annotations
 import asyncio
 from functools import wraps
 from pathlib import Path
-from threading import Thread
 from queue import Queue as SyncQueue
+from threading import Thread
 from typing import Any, Awaitable, Callable
 
-from typing_extensions import ParamSpec
-
 import anywidget
+from IPython.display import DisplayHandle
+from IPython.display import display as ipython_display
 from jsonpointer import set_pointer
-import ipywidgets as widgets
-from IPython.display import display as ipython_display, DisplayHandle
-from traitlets import Unicode
-from reactpy.core.layout import Layout
 from reactpy.config import REACTPY_DEBUG_MODE
-from reactpy.core.types import ComponentType, LayoutUpdateMessage
+from reactpy.core.layout import Layout
+from reactpy.core.types import ComponentType
+from traitlets import Unicode
+from typing_extensions import ParamSpec
 
 if REACTPY_DEBUG_MODE.current:
     # from `npx vite`

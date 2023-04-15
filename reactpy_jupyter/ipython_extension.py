@@ -2,13 +2,12 @@ from __future__ import annotations
 
 from functools import partial
 
-from reactpy.core.component import ComponentType
 from IPython import get_ipython
-from IPython.core.interactiveshell import InteractiveShell, ExecutionResult
+from IPython.core.interactiveshell import ExecutionResult, InteractiveShell
 from IPython.display import display
+from reactpy.core.component import ComponentType
 
 from .widget import LayoutWidget
-
 
 _EXTENSION_LOADED = False
 _POST_RUN_CELL_HOOK = None
