@@ -20,3 +20,10 @@ def check_python(session: Session) -> None:
 def check_javascript(session: Session) -> None:
     session.run("npm", "ci", external=True)
     session.run("npm", "run", "lint", external=True)
+
+
+@group.session
+def publish(session: Session) -> None:
+    session.install("twine", "build", "wheel")
+    session.run("python", "-m", "build", "--sdist", "--wheel", "--outdir", "dist/")
+    session.run("twine", "upload", "dist/*")

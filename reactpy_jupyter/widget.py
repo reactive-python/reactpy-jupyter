@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from functools import wraps
 from pathlib import Path
 from queue import Queue as SyncQueue
@@ -11,13 +12,14 @@ import anywidget
 from IPython.display import DisplayHandle
 from IPython.display import display as ipython_display
 from jsonpointer import set_pointer
-from reactpy.config import REACTPY_DEBUG_MODE
 from reactpy.core.layout import Layout
 from reactpy.core.types import ComponentType
 from traitlets import Unicode
 from typing_extensions import ParamSpec
 
-if REACTPY_DEBUG_MODE.current:
+DEV = bool(int(os.environ.get("REACTPY_JUPYTER_DEV", "0")))
+
+if DEV:
     # from `npx vite`
     ESM = "http://localhost:5173/src/index.js?anywidget"
 else:
