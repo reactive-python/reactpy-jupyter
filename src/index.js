@@ -1,7 +1,7 @@
 import { BaseReactPyClient, mount } from "@reactpy/client";
 import { DOMWidgetView } from "@jupyter-widgets/base";
 
-/** @param view {DOMWidgetView} view */
+/**@param view {DOMWidgetView} view */
 export function render(view) {
   const client = new JupyterReactPyClient(view);
   mount(view.el, client);

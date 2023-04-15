@@ -1,0 +1,23 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - run: pip install noxopt
+      - run: nox -t check
