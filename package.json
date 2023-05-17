@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "prettier --ignore-path .gitignore --check ."
+    "lint": "prettier --ignore-path .gitignore --check .",
+    "fix:lint": "prettier --ignore-path .gitignore --write ."
   },
   "dependencies": {
     "@jupyter-widgets/base": "^6.0.4",
