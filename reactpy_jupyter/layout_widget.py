@@ -6,7 +6,7 @@ from functools import wraps
 from pathlib import Path
 from queue import Queue as SyncQueue
 from threading import Thread
-from typing import Any, Awaitable, Callable
+from typing import Any, Awaitable, Callable, overload
 
 import anywidget
 from IPython.display import DisplayHandle
@@ -14,18 +14,15 @@ from IPython.display import display as ipython_display
 from jsonpointer import set_pointer
 from reactpy.core.layout import Layout
 from reactpy.core.types import ComponentType
-from traitlets import Unicode
+from ipywidgets import Widget, widget_serialization
+from traitlets import Unicode, List, Instance
 from typing_extensions import ParamSpec
 
-DEV = bool(int(os.environ.get("REACTPY_JUPYTER_DEV", "0")))
+from reactpy_jupyter.widget_component import InnerWidgets, inner_widgets_context
 
-if DEV:
-    # from `npx vite`
-    ESM = "http://localhost:5173/src/index.js?anywidget"
-else:
-    # from `npx vite build`
-    bundled_assets_dir = Path(__file__).parent / "static"
-    ESM = (bundled_assets_dir / "index.js").read_text()
+# from `npx vite build`
+bundled_assets_dir = Path(__file__).parent / "static"
+ESM = (bundled_assets_dir / "index.js").read_text()
 
 
 def set_import_source_base_url(base_url: str) -> None:
@@ -45,12 +42,27 @@ def run(constructor: Callable[[], ComponentType]) -> DisplayHandle | None:
 _P = ParamSpec("_P")
 
 
-def widgetize(constructor: Callable[_P, ComponentType]) -> Callable[_P, LayoutWidget]:
-    """A decorator that turns an ReactPy element into a Jupyter Widget constructor"""
+@overload
+def to_widget(value: Callable[_P, ComponentType]) -> Callable[_P, LayoutWidget]:
+    ...
 
-    @wraps(constructor)
+
+@overload
+def to_widget(value: ComponentType) -> LayoutWidget:
+    ...
+
+
+def to_widget(
+    value: Callable[_P, ComponentType] | ComponentType
+) -> Callable[_P, LayoutWidget] | LayoutWidget:
+    """Turn a component into a widget or a component construtor into a widget constructor"""
+
+    if isinstance(value, ComponentType):
+        return LayoutWidget(value)
+
+    @wraps(value)
     def wrapper(*args: Any, **kwargs: Any) -> LayoutWidget:
-        return LayoutWidget(constructor(*args, **kwargs))
+        return LayoutWidget(value(*args, **kwargs))
 
     return wrapper
 
@@ -60,12 +72,21 @@ class LayoutWidget(anywidget.AnyWidget):
 
     _esm = ESM
     _import_source_base_url = Unicode().tag(sync=True)
+    _inner_widgets = List(Instance(Widget)).tag(sync=True, **widget_serialization)
 
     def __init__(self, component: ComponentType) -> None:
-        super().__init__(_import_source_base_url=_IMPORT_SOURCE_BASE_URL)
+        super().__init__(
+            _import_source_base_url=_IMPORT_SOURCE_BASE_URL,
+            _inner_widgets=[],
+        )
         self._reactpy_model = {}
         self._reactpy_views = set()
-        self._reactpy_layout = Layout(component)
+        self._reactpy_layout = Layout(
+            inner_widgets_context(
+                component,
+                value=InnerWidgets(self._add_inner_widget, self._remove_inner_widget),
+            )
+        )
         self._reactpy_loop = _spawn_threaded_event_loop(
             self._reactpy_layout_render_loop()
         )
@@ -107,8 +128,19 @@ class LayoutWidget(anywidget.AnyWidget):
                 for v_id in self._reactpy_views:
                     self.send({"viewID": v_id, "data": update_message})
 
+    def _add_inner_widget(self, widget: Widget) -> None:
+        self._inner_widgets = self._inner_widgets + [widget]
+
+    def _remove_inner_widget(self, widget: Widget) -> None:
+        self._inner_widgets = [w for w in self._inner_widgets if w != widget]
+
     def __repr__(self) -> str:
         return f"LayoutWidget({self._reactpy_layout})"
+
+    @classmethod
+    def _dev(cls) -> None:
+        """Load the widget from the dev server"""
+        cls._esm = "http://localhost:5173/src/index.js"
 
 
 def _spawn_threaded_event_loop(

@@ -14,7 +14,7 @@ from .jupyter_server_extension import (
     REACTPY_RESOURCE_BASE_PATH,
     REACTPY_WEB_MODULES_DIR,
 )
-from .widget import set_import_source_base_url
+from .layout_widget import set_import_source_base_url
 
 logger = logging.getLogger(__name__)
 

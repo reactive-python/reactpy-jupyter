@@ -5,6 +5,27 @@ import { DOMWidgetView } from "@jupyter-widgets/base";
 export function render(view) {
   const client = new JupyterReactPyClient(view);
   mount(view.el, client);
+
+  async function updateInnerWidgets() {
+    /** @type {String[]} */
+    let innerModelIds = view.model.get("_inner_widgets");
+
+    for (let modelId of innerModelIds.map((id) =>
+      id.slice("IPY_MODEL_".length)
+    )) {
+      let model = await view.model.widget_manager.get_model(modelId);
+      (await waitForSelectorAll(`.widget-model-id-${modelId}`, view.el)).map(
+        async (containerEl) => {
+          let childView = await view.create_child_view(model);
+          containerEl.replaceChildren(childView.el);
+        }
+      );
+    }
+  }
+
+  view.model.on("change:_inner_widgets", updateInnerWidgets);
+
+  updateInnerWidgets();
 }
 
 let viewID = 0;
@@ -12,9 +33,8 @@ let viewID = 0;
 class JupyterReactPyClient extends BaseReactPyClient {
   /**
    * @param view {DOMWidgetView}
-   * @param viewID {number}
    */
-  constructor(view, viewId) {
+  constructor(view) {
     super();
     this.view = view;
     this.viewID = viewID++;
@@ -108,4 +128,44 @@ function concatAndResolveUrl(url, concat) {
     }
   }
   return url3.join("/");
+}
+
+/**
+ * @typedef {import("@jupyter-widgets/base").WidgetModel} WidgetModel
+ * @param {string[]} modelIds
+ * @param {import("@jupyter-widgets/base").IWidgetManager} widgetManager
+ * @returns {Promise<WidgetModel[]>}
+ */
+async function unpackModels(modelIds, widgetManager) {
+  return Promise.all(
+    modelIds.map((id) => widgetManager.get_model(id.slice("IPY_MODEL_".length)))
+  );
+}
+
+/**
+ * @param {String} selector
+ * @param {HTMLElement} containerElement
+ * @returns {Promise<Element[]>}
+ */
+function waitForSelectorAll(selector, containerElement) {
+  return new Promise((resolve) => {
+    const search = () => Array.from(document.querySelectorAll(selector));
+
+    let elements;
+    if ((elements = search()).length) {
+      return resolve(elements);
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      if ((elements = search()).length) {
+        resolve(elements);
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(containerElement, {
+      childList: true,
+      subtree: true,
+    });
+  });
 }
