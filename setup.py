@@ -1,4 +1,5 @@
 from __future__ import print_function
+from functools import partial
 
 import pipes
 import shutil
@@ -7,11 +8,13 @@ import sys
 import traceback
 from logging import StreamHandler, getLogger
 from pathlib import Path
+from typing import Callable
 
 from jupyter_packaging import get_data_files
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
+from distutils.cmd import Command
 
 if sys.platform == "win32":
     from subprocess import list2cmdline
@@ -136,46 +139,68 @@ package["data_files"] = get_data_files(
 )
 
 # --------------------------------------------------------------------------------------
-# Build Javascript
+# Command Classes
 # --------------------------------------------------------------------------------------
 
 
-def build_javascript_first(cls):
+def build_javascript_first(cmd: Command):
+    log.info("Installing Javascript...")
+    try:
+        npm = shutil.which("npm")  # this is required on windows
+        if npm is None:
+            raise RuntimeError("NPM is not installed.")
+        for args in (f"{npm} ci", f"{npm} run build"):
+            args_list = args.split()
+            log.info(f"> {list2cmdline(args_list)}")
+            subprocess.run(args_list, cwd=str(ROOT_DIR), check=True)
+    except Exception:
+        log.error("Failed to install Javascript")
+        log.error(traceback.format_exc())
+        raise
+    else:
+        log.info("Successfully installed Javascript")
+
+
+def build_with_pth_file(cmd: Command):
+    # install the pth file
+    pth_filename = f"{NAME}.pth"
+    source_pth_file = ROOT_DIR / pth_filename
+    source_pth_file = Path(cmd.build_lib, pth_filename)
+    cmd.copy_file(str(source_pth_file), str(source_pth_file))
+
+
+def add_to_cmd(cls: Command, functions: list[Callable[[Command], None]]) -> Command:
     class Command(cls):
         def run(self):
-            log.info("Installing Javascript...")
-            try:
-                npm = shutil.which("npm")  # this is required on windows
-                if npm is None:
-                    raise RuntimeError("NPM is not installed.")
-                for args in (f"{npm} ci", f"{npm} run build"):
-                    args_list = args.split()
-                    log.info(f"> {list2cmdline(args_list)}")
-                    subprocess.run(args_list, cwd=str(ROOT_DIR), check=True)
-            except Exception:
-                log.error("Failed to install Javascript")
-                log.error(traceback.format_exc())
-                raise
-            else:
-                log.info("Successfully installed Javascript")
             super().run()
+            for f in functions:
+                f(self)
 
     return Command
 
 
+cmd_additions = partial(
+    add_to_cmd,
+    functions=[
+        build_javascript_first,
+        build_with_pth_file,
+    ],
+)
+
+
 package["cmdclass"] = {
-    "sdist": build_javascript_first(sdist),
-    "develop": build_javascript_first(develop),
+    "sdist": cmd_additions(sdist),
+    "develop": cmd_additions(develop),
 }
 
 if sys.version_info < (3, 10, 6):
     from distutils.command.build import build
 
-    package["cmdclass"]["build"] = build_javascript_first(build)
+    package["cmdclass"]["build"] = cmd_additions(build)
 else:
     from setuptools.command.build_py import build_py
 
-    package["cmdclass"]["build_py"] = build_javascript_first(build_py)
+    package["cmdclass"]["build_py"] = cmd_additions(build_py)
 
 
 # --------------------------------------------------------------------------------------
