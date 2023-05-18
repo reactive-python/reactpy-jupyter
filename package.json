@@ -6,8 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "prettier --ignore-path .gitignore --check .",
-    "fix:lint": "prettier --ignore-path .gitignore --write ."
+    "lint": "prettier --ignore-path .gitignore --check . && eslint --ignore-path .gitignore .",
+    "fix:lint": "prettier --ignore-path .gitignore --write . && eslint --ignore-path .gitignore --fix ."
   },
   "dependencies": {
     "@jupyter-widgets/base": "^6.0.4",
@@ -18,6 +18,7 @@
     "@preact/preset-vite": "^2.5.0",
     "@types/react": "<18",
     "@types/react-dom": "<18",
+    "eslint": "^8.40.0",
     "prettier": "^2.8.7",
     "typescript": "^5.0.2",
     "vite": "^4.2.1"

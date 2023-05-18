@@ -1,5 +1,7 @@
+/**
+ * @typedef {import("@jupyter-widgets/base").DOMWidgetView} DOMWidgetView
+ */
 import { BaseReactPyClient, mount } from "@reactpy/client";
-import { DOMWidgetView } from "@jupyter-widgets/base";
 
 /**@param view {DOMWidgetView} view */
 export function render(view) {
@@ -106,10 +108,10 @@ const jupyterServerBaseUrl = (() => {
 })();
 
 function concatAndResolveUrl(url, concat) {
-  var url1 = (url.endsWith("/") ? url.slice(0, -1) : url).split("/");
-  var url2 = concat.split("/");
-  var url3 = [];
-  for (var i = 0, l = url1.length; i < l; i++) {
+  let url1 = (url.endsWith("/") ? url.slice(0, -1) : url).split("/");
+  let url2 = concat.split("/");
+  let url3 = [];
+  for (let i = 0, l = url1.length; i < l; i++) {
     if (url1[i] == "..") {
       url3.pop();
     } else if (url1[i] == ".") {
@@ -118,7 +120,7 @@ function concatAndResolveUrl(url, concat) {
       url3.push(url1[i]);
     }
   }
-  for (var i = 0, l = url2.length; i < l; i++) {
+  for (let i = 0, l = url2.length; i < l; i++) {
     if (url2[i] == "..") {
       url3.pop();
     } else if (url2[i] == ".") {
@@ -131,37 +133,28 @@ function concatAndResolveUrl(url, concat) {
 }
 
 /**
- * @typedef {import("@jupyter-widgets/base").WidgetModel} WidgetModel
- * @param {string[]} modelIds
- * @param {import("@jupyter-widgets/base").IWidgetManager} widgetManager
- * @returns {Promise<WidgetModel[]>}
- */
-async function unpackModels(modelIds, widgetManager) {
-  return Promise.all(
-    modelIds.map((id) => widgetManager.get_model(id.slice("IPY_MODEL_".length)))
-  );
-}
-
-/**
  * @param {String} selector
  * @param {HTMLElement} containerElement
  * @returns {Promise<Element[]>}
  */
 function waitForSelectorAll(selector, containerElement) {
   return new Promise((resolve) => {
-    const search = () => Array.from(document.querySelectorAll(selector));
+    const resolveSearch = () => {
+      const elements = Array.from(document.querySelectorAll(selector));
+      if (elements.length) {
+        resolve(elements);
+        return true;
+      }
+      return false;
+    };
 
-    let elements;
-    if ((elements = search()).length) {
-      return resolve(elements);
+    if (resolveSearch()) {
+      return;
     }
 
-    const observer = new MutationObserver((mutations) => {
-      if ((elements = search()).length) {
-        resolve(elements);
-        observer.disconnect();
-      }
-    });
+    const observer = new MutationObserver(() =>
+      resolveSearch() ? observer.disconnect() : null
+    );
 
     observer.observe(containerElement, {
       childList: true,
