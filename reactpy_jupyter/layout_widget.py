@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import os
 from functools import wraps
 from pathlib import Path
 from queue import Queue as SyncQueue
