@@ -3,4 +3,3 @@ graft jupyter-config
 
 include LICENSE
 include pyproject.toml
-include reactpy_jupyter.pth
