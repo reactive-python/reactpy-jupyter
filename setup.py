@@ -162,9 +162,14 @@ def build_javascript_first(cmd: Command):
 
 
 def build_with_pth_file(cmd: Command):
+    build_lib = getattr(cmd, "build_lib", None) or getattr(cmd, "dist_dir", None)
+    if build_lib is None:
+        raise ValueError("Cannot find build_lib or dist_dir")
+
     pth_filename = f"{NAME}.pth"
     source_pth_file = ROOT_DIR / pth_filename
-    cmd.copy_file(str(source_pth_file), pth_filename)
+    target_pth_file = Path(build_lib, pth_filename)
+    cmd.copy_file(str(source_pth_file), str(target_pth_file))
 
 
 def add_to_cmd(cls: Command, functions: list[Callable[[Command], None]]) -> Command:

@@ -10,7 +10,7 @@ from .layout_widget import run, set_import_source_base_url, to_widget
 from .monkey_patch import execute_patch
 from .widget_component import from_widget
 
-__version__ = "0.9.4"  # DO NOT MODIFY
+__version__ = "0.9.5"  # DO NOT MODIFY
 
 __all__ = (
     "from_widget",
