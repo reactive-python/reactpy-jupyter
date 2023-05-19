@@ -164,9 +164,9 @@ def build_javascript_first(cmd: Command):
 def add_to_cmd(cls: Command, functions: list[Callable[[Command], None]]) -> Command:
     class Command(cls):
         def run(self):
-            super().run()
             for f in functions:
                 f(self)
+            super().run()
 
     return Command
 
