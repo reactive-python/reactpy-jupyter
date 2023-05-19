@@ -4,6 +4,20 @@ group = NoxOpt(auto_tag=True)
 
 
 @group.session
+def fix_lint(session: Session) -> None:
+    session.install(
+        "black[jupyter]",
+        "flake8-pyproject",
+        "flake8",
+        "isort",
+    )
+    session.run("black", ".")
+    session.run("isort", ".")
+
+    session.run("npm", "run", "fix:lint", external=True)
+
+
+@group.session
 def check_python(session: Session) -> None:
     session.install(
         "black[jupyter]",

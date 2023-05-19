@@ -1,11 +1,12 @@
 from __future__ import print_function
-from functools import partial
 
 import pipes
 import shutil
 import subprocess
 import sys
 import traceback
+from distutils.cmd import Command
+from functools import partial
 from logging import StreamHandler, getLogger
 from pathlib import Path
 from typing import Callable
@@ -14,7 +15,6 @@ from jupyter_packaging import get_data_files
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
-from distutils.cmd import Command
 
 if sys.platform == "win32":
     from subprocess import list2cmdline
