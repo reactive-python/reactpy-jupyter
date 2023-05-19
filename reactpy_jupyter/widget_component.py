@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 from typing import Callable
+
 from attr import dataclass
 from ipywidgets import Widget
-
-from reactpy import component, create_context, use_context, use_effect, html
-from reactpy.types import VdomDict, Context
-
+from reactpy import component, create_context, html, use_context, use_effect
+from reactpy.types import Context, VdomDict
 
 inner_widgets_context: Context[InnerWidgets | None] = create_context(None)
 

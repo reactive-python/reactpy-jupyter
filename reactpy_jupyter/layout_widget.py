@@ -10,11 +10,11 @@ from typing import Any, Awaitable, Callable, overload
 import anywidget
 from IPython.display import DisplayHandle
 from IPython.display import display as ipython_display
+from ipywidgets import Widget, widget_serialization
 from jsonpointer import set_pointer
 from reactpy.core.layout import Layout
 from reactpy.core.types import ComponentType
-from ipywidgets import Widget, widget_serialization
-from traitlets import Unicode, List, Instance
+from traitlets import Instance, List, Unicode
 from typing_extensions import ParamSpec
 
 from reactpy_jupyter.widget_component import InnerWidgets, inner_widgets_context
