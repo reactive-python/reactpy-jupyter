@@ -161,14 +161,6 @@ def build_javascript_first(cmd: Command):
         log.info("Successfully installed Javascript")
 
 
-def build_with_pth_file(cmd: Command):
-    # install the pth file
-    pth_filename = f"{NAME}.pth"
-    source_pth_file = ROOT_DIR / pth_filename
-    source_pth_file = Path(cmd.build_lib, pth_filename)
-    cmd.copy_file(str(source_pth_file), str(source_pth_file))
-
-
 def add_to_cmd(cls: Command, functions: list[Callable[[Command], None]]) -> Command:
     class Command(cls):
         def run(self):
@@ -183,7 +175,6 @@ cmd_additions = partial(
     add_to_cmd,
     functions=[
         build_javascript_first,
-        build_with_pth_file,
     ],
 )
 
