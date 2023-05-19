@@ -168,7 +168,11 @@ def build_with_pth_file(cmd: Command):
 
     pth_filename = f"{NAME}.pth"
     source_pth_file = ROOT_DIR / pth_filename
-    target_pth_file = Path(build_lib, pth_filename)
+
+    build_lib = Path(build_lib)
+    build_lib.mkdir(parents=True, exist_ok=True)
+    target_pth_file = build_lib / pth_filename
+
     cmd.copy_file(str(source_pth_file), str(target_pth_file))
 
 
