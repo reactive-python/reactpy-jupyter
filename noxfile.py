@@ -39,5 +39,5 @@ def check_javascript(session: Session) -> None:
 @group.session
 def publish(session: Session) -> None:
     session.install("twine", "build", "wheel")
-    session.run("python", "-m", "build", "--wheel", "--outdir", "dist/")
+    session.run("python", "-m", "build", "--wheel", "--sdist", "--outdir", "dist/")
     session.run("twine", "upload", "dist/*")
