@@ -18,22 +18,6 @@ To install use `pip`:
 pip install reactpy_jupyter
 ```
 
-Then, before anything else, do one of the following:
-
-1. At the top of your notebook run
-
-   ```python
-   import reactpy_jupyter
-   ```
-
-2. Register `reactpy_jupyter` as a permanant IPython extension in [your config file](https://ipython.readthedocs.io/en/stable/config/intro.html#introduction-to-ipython-configuration):
-
-   ```python
-   c.InteractiveShellApp.extensions = [
-       'reactpy_jupyter'
-   ]
-   ```
-
 ## Usage
 
 Once you're done [getting started](#getting-started), you can author and display ReactPy
@@ -58,22 +42,11 @@ the `reactpy_juptyer.widgetize` function. This is useful if you wish to use Reac
 with other Jupyter Widgets as in the following example:
 
 ```python
-ClickCountWidget = reactpy_jupyter.widgetize(ClickCount)
+ClickCountWidget = reactpy_jupyter.to_widget(ClickCount)
 ipywidgets.Box(
     [
         ClickCountWidget(),
         ClickCountWidget(),
-    ]
-)
-```
-
-Alternatively just wrap an `reactpy` element instance in an `reactpy_jupyter.LayoutWidget`:
-
-```python
-ipywidgets.Box(
-    [
-        reactpy_jupyter.LayoutWidget(ClickCount()),
-        reactpy_jupyter.LayoutWidget(ClickCount()),
     ]
 )
 ```
