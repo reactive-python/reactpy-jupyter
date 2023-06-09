@@ -38,7 +38,7 @@ ClickCount()
 ```
 
 You can also turn an `reactpy` element constructor into one that returns an `ipywidget` with
-the `reactpy_juptyer.widgetize` function. This is useful if you wish to use ReactPy in combination
+the `reactpy_juptyer.to_widget` function. This is useful if you wish to use ReactPy in combination
 with other Jupyter Widgets as in the following example:
 
 ```python
