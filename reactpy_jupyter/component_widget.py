@@ -35,38 +35,38 @@ def run(constructor: Callable[[], ComponentType]) -> DisplayHandle | None:
 
     This function is meant to be similarly to ``reactpy.run``.
     """
-    return ipython_display(LayoutWidget(constructor()))
+    return ipython_display(ComponentWidget(constructor()))
 
 
 _P = ParamSpec("_P")
 
 
 @overload
-def to_widget(value: Callable[_P, ComponentType]) -> Callable[_P, LayoutWidget]:
+def to_widget(value: Callable[_P, ComponentType]) -> Callable[_P, ComponentWidget]:
     ...
 
 
 @overload
-def to_widget(value: ComponentType) -> LayoutWidget:
+def to_widget(value: ComponentType) -> ComponentWidget:
     ...
 
 
 def to_widget(
     value: Callable[_P, ComponentType] | ComponentType
-) -> Callable[_P, LayoutWidget] | LayoutWidget:
+) -> Callable[_P, ComponentWidget] | ComponentWidget:
     """Turn a component into a widget or a component construtor into a widget constructor"""
 
     if isinstance(value, ComponentType):
-        return LayoutWidget(value)
+        return ComponentWidget(value)
 
     @wraps(value)
-    def wrapper(*args: Any, **kwargs: Any) -> LayoutWidget:
-        return LayoutWidget(value(*args, **kwargs))
+    def wrapper(*args: Any, **kwargs: Any) -> ComponentWidget:
+        return ComponentWidget(value(*args, **kwargs))
 
     return wrapper
 
 
-class LayoutWidget(anywidget.AnyWidget):
+class ComponentWidget(anywidget.AnyWidget):
     """A widget for displaying ReactPy elements"""
 
     _esm = ESM
